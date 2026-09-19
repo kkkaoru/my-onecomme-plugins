@@ -4,9 +4,11 @@
 import { defineConfig } from 'vite'
 import type { UserConfig } from 'vite'
 
+import { reactPlugins } from '../../vite.react.ts'
+
 const TARGETS = {
   settings: {
-    entry: 'src/ui-main.ts',
+    entry: 'src/ui-main.tsx',
     outDir: 'dist/flow-comment-plugin',
   },
   template: {
@@ -38,6 +40,9 @@ export default defineConfig(({ mode }): UserConfig => {
     define: {
       'process.env.NODE_ENV': JSON.stringify('production'),
     },
+    // テンプレート側は React を使わないが、React Compiler は対象外の
+    // ファイルを素通しするので、両方の成果物で同じ一式を使う。
+    plugins: reactPlugins(),
     resolve: {
       conditions: ['production', 'import', 'module', 'browser', 'default'],
     },
