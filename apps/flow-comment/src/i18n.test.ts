@@ -1,8 +1,13 @@
+import { FIELD_LABEL_KEYS } from '@my-onecomme-plugins/flow-comment-core/fields'
+import { SAMPLE_LABEL_KEYS } from '@my-onecomme-plugins/flow-comment-core/samples'
+import { UI_MESSAGE_KEYS } from '@my-onecomme-plugins/flow-comment-ui/messages'
 // @vitest-environment happy-dom
 // Runs with bun.
 import { afterEach, expect, test } from 'vitest'
 
 import { DEFAULT_LOCALE, MESSAGES, createTranslator } from './i18n'
+import { EN_MESSAGES } from './i18n/en'
+import { JA_MESSAGES } from './i18n/ja'
 
 const originalLanguage = globalThis.navigator.language
 
@@ -56,4 +61,12 @@ test('keeps the placeholder when a parameter is missing', () => {
 test('has the same keys in every locale', () => {
   expect.hasAssertions()
   expect(Object.keys(MESSAGES.ja).toSorted()).toStrictEqual(Object.keys(MESSAGES.en).toSorted())
+})
+
+// 画面が使うキーを辞書がすべて持っているか。抜けは英語側で起きやすい。
+test('covers every key the ui package asks for', () => {
+  expect.hasAssertions()
+  const asked = [...FIELD_LABEL_KEYS, ...SAMPLE_LABEL_KEYS, ...UI_MESSAGE_KEYS]
+  expect(asked.filter((key) => !(key in JA_MESSAGES))).toStrictEqual([])
+  expect(asked.filter((key) => !(key in EN_MESSAGES))).toStrictEqual([])
 })

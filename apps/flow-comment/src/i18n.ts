@@ -6,6 +6,7 @@ import { JA_MESSAGES } from './i18n/ja'
 const MESSAGES = { en: EN_MESSAGES, ja: JA_MESSAGES } as const
 
 const DEFAULT_LOCALE = 'ja'
+const LANGUAGE_CODE_LENGTH = 2
 
 type Locale = keyof typeof MESSAGES
 
@@ -25,7 +26,7 @@ const detectLocale = (stored: string | null): Locale => {
   if (stored !== null && isLocale(stored)) {
     return stored
   }
-  const preferred = globalThis.navigator.language.split('-')[0] ?? ''
+  const preferred = globalThis.navigator.language.slice(0, LANGUAGE_CODE_LENGTH)
   return isLocale(preferred) ? preferred : DEFAULT_LOCALE
 }
 

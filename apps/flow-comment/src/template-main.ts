@@ -7,13 +7,16 @@ import {
   readFlowConfig,
 } from '@my-onecomme-plugins/flow-comment-core/settings'
 import type { FlowConfig } from '@my-onecomme-plugins/flow-comment-core/settings'
+import { createSettingsApi } from '@my-onecomme-plugins/flow-comment-ui/api'
 
 import { toFlowComment } from './comment-map'
 import { createTranslator } from './i18n'
+import { FLOW_COMMENT_UID } from './settings/uid'
 import { createLabelFormatter } from './ui/label-format'
-import { fetchSettings } from './ui/plugin-api'
 
 const WATCH_INTERVAL_MS = 2000
+
+const api = createSettingsApi(`/api/plugins/${FLOW_COMMENT_UID}`)
 
 const readVariable = (name: string): string =>
   globalThis.getComputedStyle(document.documentElement).getPropertyValue(name)
@@ -26,7 +29,7 @@ const applySettings = (flow: FlowController, settings: FlowConfig | null): void 
 const watchSettings = (flow: FlowController, initial: FlowConfig | null): void => {
   let current = JSON.stringify(initial)
   const check = async (): Promise<void> => {
-    const next = await fetchSettings()
+    const next = await api.fetchSettings()
     const serialized = JSON.stringify(next)
     if (serialized === current) {
       return
@@ -44,12 +47,14 @@ const start = async (): Promise<void> => {
   if (root === null) {
     return
   }
-  const settings = await fetchSettings()
+  const settings = await api.fetchSettings()
   const flow = createFlow(root, readFlowConfig(createVariableLookup(readVariable, settings)), {
     formatLabel: createLabelFormatter(createTranslator().t),
   })
   watchSettings(flow, settings)
   await OneSDK.ready()
+  // OneSDK の API 名であって React のフックではない。
+  // oxlint-disable-next-line react-hooks/rules-of-hooks -- OneSDK の usePermission
   OneSDK.setup({ mode: 'diff', permissions: OneSDK.usePermission([OneSDK.PERM.COMMENT]) })
   OneSDK.subscribe({
     action: 'comments',

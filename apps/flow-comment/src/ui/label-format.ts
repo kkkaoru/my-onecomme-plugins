@@ -7,6 +7,7 @@ import type {
   LabelKind,
 } from '@my-onecomme-plugins/flow-comment-core/comment'
 
+import { createTranslator } from '../i18n'
 import type { Translator } from '../i18n'
 
 type Translate = Translator['t']
@@ -32,3 +33,6 @@ export const createLabelFormatter =
   (t: Translate): FormatLabel =>
   (label) =>
     LABEL_TEXT[label.kind](label, t)
+
+// 画面の言語でラベルを書く形。読み込み時に1度だけ作る。
+export const createAppLabelFormatter = (): FormatLabel => createLabelFormatter(createTranslator().t)

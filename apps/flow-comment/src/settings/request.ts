@@ -16,8 +16,8 @@ const STATUS_NOT_FOUND = 404
 const ACTION_PRESETS = 'presets'
 const ACTION_SETTINGS = 'settings'
 
-const readAction = (req: PluginRequest): string => req.params?.action ?? ACTION_SETTINGS
-const readPresetName = (req: PluginRequest): string => req.params?.name ?? ''
+const readAction = (req: PluginRequest): string => req.params?.['action'] ?? ACTION_SETTINGS
+const readPresetName = (req: PluginRequest): string => req.params?.['name'] ?? ''
 
 const handleGet = (store: OneCommeStore, action: string): PluginResponse =>
   action === ACTION_PRESETS

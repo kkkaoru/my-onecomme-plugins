@@ -11,11 +11,20 @@
   --ui-letter-spacing: 0.01em;
   --ui-line-height: 1.8;
 
-  /* 余白（これを基準に導出する） */
-  --ui-space: 8px;
+  /* 余白は 4px の倍数だけ。段階に名前を付けて、ここ以外に数値を書かない。 */
+  --ui-space-1: 4px;
+  --ui-space-2: 8px;
+  --ui-space-3: 12px;
+  --ui-space-4: 16px;
+  --ui-space-5: 20px;
+  --ui-space-6: 24px;
+  --ui-space-8: 32px;
+  --ui-space-12: 48px;
+  --ui-space-32: 128px;
+  --ui-space-40: 160px;
 
   /* 形と色 */
-  --ui-radius: 6px;
+  --ui-radius: var(--ui-space-2);
   --ui-border: 1px solid rgb(128 128 128 / 45%);
   --ui-color-fg: light-dark(#1b1b1f, #f2f2f4);
   --ui-color-bg: light-dark(#ffffff, #1b1b1f);
@@ -31,7 +40,7 @@
 
 body {
   margin: 0;
-  padding: calc(var(--ui-space) * 2);
+  padding: var(--ui-space-4);
   font-family: var(--ui-font);
   font-size: var(--ui-font-size);
   letter-spacing: var(--ui-letter-spacing);
@@ -41,17 +50,17 @@ body {
 }
 
 h1 {
-  margin: 0 0 var(--ui-space);
+  margin: 0 0 var(--ui-space-2);
   font-size: calc(var(--ui-font-size) * 1.4);
 }
 
 h2 {
-  margin: calc(var(--ui-space) * 3) 0 var(--ui-space);
+  margin: var(--ui-space-8) 0 var(--ui-space-3);
   font-size: calc(var(--ui-font-size) * 1.15);
 }
 
 p {
-  margin: 0 0 var(--ui-space);
+  margin: 0 0 var(--ui-space-2);
 }
 
 /* ---- 操作要素 ---- */
@@ -60,7 +69,7 @@ input,
 select {
   box-sizing: border-box;
   min-height: var(--ui-control-height);
-  padding: 0 calc(var(--ui-space) * 1.5);
+  padding: 0 var(--ui-space-3);
   border: var(--ui-border);
   border-radius: var(--ui-radius);
   font-family: inherit;
@@ -76,42 +85,146 @@ button {
 }
 
 input[type='color'] {
-  padding: 0 calc(var(--ui-space) / 2);
+  padding: 0 var(--ui-space-1);
 }
 
-input[type='checkbox'],
-input[type='radio'] {
+/* ---- チェックボックス / ラジオ（base-ui は button として描く） ---- */
+.fc-checkbox,
+.fc-radio {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--ui-space-6);
+  height: var(--ui-space-6);
   min-height: 0;
-  width: calc(var(--ui-space) * 3);
-  height: calc(var(--ui-space) * 3);
   padding: 0;
-  accent-color: var(--ui-color-accent);
+  border: var(--ui-border);
+  border-radius: calc(var(--ui-radius) / 2);
+  background: transparent;
 }
 
-input[type='range'] {
+.fc-radio,
+.fc-checkbox[data-radio] {
+  border-radius: 50%;
+}
+
+.fc-checkbox[data-checked],
+.fc-radio[data-checked] {
+  border-color: var(--ui-color-accent);
+  background: var(--ui-color-accent);
+}
+
+.fc-check-indicator {
+  width: var(--ui-space-3);
+  height: var(--ui-space-3);
+  border-radius: var(--ui-space-1);
+  background: #ffffff;
+}
+
+.fc-radio[data-checked]::after {
+  width: var(--ui-space-3);
+  height: var(--ui-space-3);
+  border-radius: 50%;
+  background: #ffffff;
+  content: '';
+}
+
+.radio-item .fc-radio {
+  border-radius: 50%;
+}
+
+/* ---- スライダー（base-ui） ---- */
+.fc-slider {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  min-width: 0;
   min-height: var(--ui-control-height);
-  padding: 0;
-  border: 0;
-  accent-color: var(--ui-color-accent);
+}
+
+.fc-track {
+  position: relative;
+  width: 100%;
+  height: var(--ui-space-2);
+  border-radius: 999px;
+  background: var(--ui-color-track, rgb(0 0 0 / 20%));
+}
+
+.fc-indicator {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  border-radius: 999px;
+  background: var(--ui-color-accent);
+}
+
+.fc-thumb {
+  position: absolute;
+  box-sizing: border-box;
+  width: var(--ui-space-5);
+  height: var(--ui-space-5);
+  border: var(--ui-border);
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: grab;
+}
+
+.fc-readout {
+  flex: 0 0 var(--ui-space-12);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* ---- セレクト（base-ui） ---- */
+.fc-select {
+  display: inline-flex;
+  gap: var(--ui-space-2);
+  align-items: center;
+  justify-content: space-between;
+  min-width: var(--ui-space-32);
+}
+
+.fc-popup {
+  z-index: 10;
+  min-width: var(--anchor-width, var(--ui-space-32));
+  padding: var(--ui-space-1);
+  border: var(--ui-border);
+  border-radius: var(--ui-radius);
+  background: var(--ui-color-surface, #ffffff);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
+}
+
+.fc-option {
+  padding: var(--ui-space-1) var(--ui-space-2);
+  border-radius: calc(var(--ui-radius) / 2);
+  cursor: pointer;
+}
+
+.fc-option[data-highlighted] {
+  background: var(--ui-color-accent);
+  color: #ffffff;
 }
 
 :focus-visible {
-  outline: 3px solid var(--ui-color-accent);
-  outline-offset: 2px;
+  outline: var(--ui-space-1) solid var(--ui-color-accent);
+  outline-offset: var(--ui-space-1);
 }
 
 /* ---- プレビュー ---- */
 .preview-tools {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--ui-space);
+  gap: var(--ui-space-2);
   align-items: center;
+  margin: 0 0 var(--ui-space-3);
 }
 
 .preview-samples {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--ui-space);
+  gap: var(--ui-space-2);
 }
 
 .preview {
@@ -134,13 +247,22 @@ input[type='range'] {
 /* ---- フォーム ---- */
 .field {
   display: flex;
-  gap: var(--ui-space);
+  gap: var(--ui-space-2);
   align-items: center;
-  margin: 0 0 var(--ui-space);
+  margin: 0 0 var(--ui-space-3);
 }
 
 .field-wide {
   align-items: flex-start;
+}
+
+/* パネル内の1行。項目同士がくっつかないよう、行の間隔はここで持つ。 */
+.fc-field {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+  align-items: center;
+  margin: 0 0 var(--ui-space-3);
 }
 
 .field > label,
@@ -149,41 +271,110 @@ input[type='range'] {
 }
 
 .field > output {
-  flex: 0 0 calc(var(--ui-space) * 6);
+  flex: 0 0 var(--ui-space-12);
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-.field > input:not([type='checkbox']):not([type='radio']),
-.field > select {
+.fc-input,
+.fc-textarea {
   flex: 1 1 auto;
   min-width: 0;
 }
 
-/* 影が無効なときは、値を残したまま操作できないことを示す。 */
-.field.is-disabled {
-  opacity: 0.45;
+.fc-input {
+  box-sizing: border-box;
+  min-height: var(--ui-control-height);
+  padding: 0 var(--ui-space-3);
+  border: var(--ui-border);
+  border-radius: var(--ui-radius);
+  color: inherit;
+}
+
+textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--ui-space-2);
+  border: var(--ui-border);
+  border-radius: var(--ui-radius);
+  font-family: inherit;
+  font-size: var(--ui-font-size);
+  color: inherit;
+}
+
+/* 影が無効なときは、項目を残したまま触れないことを示す（消さない）。
+   ラベルの文字は薄くしすぎない（コントラストを保つ）。 */
+.field.is-disabled button,
+.field.is-disabled input,
+.field.is-disabled select {
+  opacity: 0.6;
+}
+
+.field.is-disabled .field-label,
+.field.is-disabled legend {
+  color: var(--ui-color-muted);
+}
+
+.field.is-disabled button,
+.field.is-disabled input,
+.field.is-disabled [data-disabled] {
+  cursor: not-allowed;
 }
 
 .radio-group {
   display: flex;
   flex: 1 1 auto;
   flex-wrap: wrap;
-  gap: calc(var(--ui-space) * 2);
+  gap: var(--ui-space-4);
   align-items: center;
 }
 
 .radio-item {
   display: inline-flex;
-  gap: var(--ui-space);
+  gap: var(--ui-space-2);
   align-items: center;
   cursor: pointer;
 }
 
+/* 開閉する見出し。押せることが分かるよう、印を付ける。 */
+.fc-collapsible-trigger {
+  display: flex;
+  gap: var(--ui-space-2);
+  align-items: center;
+  margin: var(--ui-space-8) 0 var(--ui-space-3);
+  padding: 0;
+  font-size: calc(var(--ui-font-size) * 1.15);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.fc-collapsible-trigger::before {
+  content: '▶';
+  font-size: var(--ui-font-size-small);
+}
+
+.fc-collapsible[open] .fc-collapsible-trigger::before {
+  content: '▼';
+}
+
+.fc-collapsible-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-3);
+}
+
+/* まとまりの見出し（余白・影など）。 */
+.group-heading {
+  margin: var(--ui-space-4) 0 var(--ui-space-2);
+  font-size: var(--ui-font-size-small);
+  color: var(--ui-color-muted);
+  font-weight: 600;
+}
+
 .actions {
   display: flex;
-  gap: var(--ui-space);
-  margin-top: calc(var(--ui-space) * 2);
+  gap: var(--ui-space-2);
+  margin-top: var(--ui-space-6);
 }
 
 /* ---- フォント候補 ---- */
@@ -191,26 +382,34 @@ input[type='range'] {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
-  gap: var(--ui-space);
+  gap: var(--ui-space-2);
   min-width: 0;
 }
 
-.font-options {
+.font-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: calc(var(--ui-space) / 2);
-  max-height: calc(var(--ui-space) * 20);
+  gap: var(--ui-space-2);
+  align-items: center;
+}
+
+.font-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+  max-height: var(--ui-space-40);
   overflow-y: auto;
 }
 
-.font-option {
+.fc-font-choice {
   min-height: 0;
-  padding: calc(var(--ui-space) / 2) var(--ui-space);
+  padding: var(--ui-space-1) var(--ui-space-2);
   font-size: var(--ui-font-size-small);
 }
 
 #status {
-  min-height: var(--ui-line-height);
+  min-height: calc(var(--ui-font-size) * var(--ui-line-height));
+  margin-top: var(--ui-space-4);
 }
 
 /* ---- プレビュー内のコメント描画 ---- */
@@ -218,8 +417,10 @@ input[type='range'] {
   position: absolute;
   left: 0;
   box-sizing: border-box;
+  /* 1件ずつレイアウトとペイントを独立させる。件数が増えても再計算が波及しない。 */
+  contain: layout paint style;
   display: flex;
-  gap: calc(var(--ui-space) / 2);
+  gap: var(--ui-space-1);
   align-items: center;
   white-space: nowrap;
   will-change: transform;
@@ -244,7 +445,7 @@ input[type='range'] {
 }
 
 .fc-name {
-  margin-right: calc(var(--ui-space) / 2);
+  margin-right: var(--ui-space-1);
 }
 
 .fc-paid {
@@ -255,7 +456,7 @@ input[type='range'] {
 textarea {
   box-sizing: border-box;
   width: 100%;
-  padding: var(--ui-space);
+  padding: var(--ui-space-2);
   border: var(--ui-border);
   border-radius: var(--ui-radius);
   font-family: var(--ui-font);
