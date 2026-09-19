@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "DOM"],
     "types": ["node"],
     "module": "Preserve",
     "moduleResolution": "bundler",
@@ -16,8 +16,17 @@
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "jsx": "react-jsx"
   },
-  "include": ["vitest.config.ts", "apps/*/src/**/*.ts", "packages/*/src/**/*.ts"],
+  "include": [
+    "vitest.config.ts",
+    "vitest.storybook.config.ts",
+    "apps/*/src/**/*.ts",
+    "apps/*/src/**/*.tsx",
+    "packages/*/src/**/*.ts",
+    "packages/*/src/**/*.tsx",
+    "packages/*/src/**/*.d.ts"
+  ],
   "exclude": ["node_modules", "dist", "coverage"]
 }
