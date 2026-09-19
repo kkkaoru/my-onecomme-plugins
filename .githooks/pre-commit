@@ -4,5 +4,6 @@ set -eu
 cd "$(git rev-parse --show-toplevel)"
 
 bun run format:check
+bun run tsc
 bun run lint
 bun run test
