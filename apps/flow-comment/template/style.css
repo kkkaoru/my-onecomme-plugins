@@ -1,0 +1,70 @@
+/*
+ * 見た目は設定画面 (Flow Comment プラグイン) から変更できる。
+ * ここに --fc-* を書くと、その配信元だけ設定画面より優先される。
+ * 例: :root { --fc-lanes: 8; --fc-duration: 6000; --fc-text-color: #ff0; }
+ */
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+}
+
+.flow {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  contain: layout paint;
+}
+
+/* 各アイテムは生成から消滅までアニメーションし続けるため、will-change は
+   寿命全体に対して妥当。終了時に render.ts が auto に戻してレイヤーを解放する。 */
+.fc-item {
+  position: absolute;
+  left: 0;
+  box-sizing: border-box;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.fc-name {
+  margin-right: 0.5em;
+}
+
+.fc-text img {
+  height: 1em;
+  width: auto;
+  vertical-align: middle;
+}
+
+.fc-avatar {
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.fc-badge {
+  display: inline-flex;
+  align-items: center;
+}
+
+.fc-badge img {
+  height: 1em;
+  width: auto;
+  vertical-align: middle;
+}
+
+.fc-paid {
+  font-weight: bold;
+}
+
+/* OneComme の標準テーマと同じく、ギフト画像は本文中で少し大きめに出す。 */
+.fc-text .gift-image {
+  height: 2em;
+  width: auto;
+  vertical-align: middle;
+}
