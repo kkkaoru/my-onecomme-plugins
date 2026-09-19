@@ -4,11 +4,13 @@
   "singleQuote": true,
   "semi": false,
   "trailingComma": "all",
+  "sortImports": {},
   "ignorePatterns": [
     "**/dist/**",
     "**/node_modules/**",
     "**/coverage/**",
     "**/.vitest/**",
-    "bun.lock"
+    "bun.lock",
+    "storybook-static/**"
   ]
 }

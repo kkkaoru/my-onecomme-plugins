@@ -11,30 +11,141 @@
     "nursery": "error"
   },
   "env": {
+    "browser": true,
     "node": true,
     "es2024": true
   },
-  "ignorePatterns": ["**/dist/**", "**/node_modules/**", "**/coverage/**", "**/.vitest/**"],
+  "globals": {
+    "OneSDK": "readonly",
+    "queryLocalFonts": "readonly"
+  },
+  "ignorePatterns": [
+    "**/dist/**",
+    "**/node_modules/**",
+    "**/coverage/**",
+    "**/.vitest/**",
+    "**/storybook-static/**"
+  ],
   "rules": {
     "no-console": "off",
-    "no-restricted-imports": ["error", { "paths": ["bun:test"] }],
+    "no-magic-numbers": [
+      "error",
+      {
+        "ignore": [0, 1]
+      }
+    ],
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": ["bun:test"]
+      }
+    ],
     "oxc/no-barrel-file": "error",
-    "typescript/consistent-type-assertions": ["error", { "assertionStyle": "never" }],
+    "typescript/consistent-type-assertions": [
+      "error",
+      {
+        "assertionStyle": "never"
+      }
+    ],
     "typescript/consistent-type-definitions": ["error", "interface"],
     "typescript/no-explicit-any": "error",
     "typescript/no-non-null-assertion": "error",
     "unicorn/prefer-node-protocol": "error",
+    "max-classes-per-file": ["error", 1],
+    "max-depth": ["error", 4],
+    "max-lines": [
+      "error",
+      {
+        "max": 150,
+        "skipBlankLines": true,
+        "skipComments": true
+      }
+    ],
+    "max-lines-per-function": [
+      "error",
+      {
+        "max": 50,
+        "skipBlankLines": true,
+        "skipComments": true
+      }
+    ],
+    "max-nested-callbacks": ["error", 3],
+    "max-params": ["error", 4],
+    "max-statements": ["error", 20],
+    "capitalized-comments": "off",
+    "id-length": "off",
     "import/exports-last": "off",
+    "import/group-exports": "off",
+    "no-duplicate-imports": "off",
+    "promise/prefer-await-to-callbacks": "off",
     "import/no-default-export": "off",
     "import/no-named-export": "off",
     "import/prefer-default-export": "off",
+    "import/unambiguous": "off",
     "no-ternary": "off",
     "one-var": "off",
+    "no-undefined": "off",
+    "no-void": "off",
+    "oxc/no-async-await": "off",
+    "oxc/no-optional-chaining": "off",
+    "oxc/no-rest-spread-properties": "off",
+    "sort-imports": "off",
     "typescript/prefer-as-const": "off",
+    "unicorn/max-nested-calls": "off",
+    "unicorn/prefer-number-coercion": "off",
+    "unicorn/no-null": "off",
+    "unicorn/prefer-top-level-await": "off",
     "vitest/no-importing-vitest-globals": "off",
     "vitest/prefer-to-be-falsy": "off",
     "vitest/prefer-to-be-truthy": "off",
     "vitest/require-top-level-describe": "off",
-    "vitest/require-test-timeout": "off"
-  }
+    "vitest/require-test-timeout": "off",
+    "import/no-relative-parent-imports": "off",
+    "node/no-sync": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.d.ts"],
+      "rules": {
+        "no-implicit-globals": "off",
+        "no-redeclare": "off"
+      }
+    },
+    {
+      "files": ["**/*-main.ts"],
+      "rules": {
+        "import/max-dependencies": ["error", { "max": 20 }]
+      }
+    },
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx", "**/*.stories.tsx"],
+      "plugins": ["vitest"],
+      "rules": {
+        "max-classes-per-file": "off",
+        "max-depth": "off",
+        "max-lines": "off",
+        "max-lines-per-function": "off",
+        "max-nested-callbacks": "off",
+        "max-params": "off",
+        "max-statements": "off",
+        "no-magic-numbers": "off",
+        "promise/avoid-new": "off",
+        "typescript/no-non-null-assertion": "off",
+        "unicorn/prefer-dom-node-dataset": "off",
+        "unicorn/prefer-single-call": "off",
+        "vitest/no-hooks": "off",
+        "vitest/prefer-expect-resolves": "off",
+        "vitest/prefer-to-be": "off",
+        "vitest/prefer-to-have-length": "off"
+      }
+    },
+    {
+      "files": ["**/scripts/**/*.mjs"],
+      "rules": {
+        "import/no-nodejs-modules": "off",
+        "node/no-top-level-await": "off",
+        "no-await-in-loop": "off"
+      }
+    }
+  ]
 }

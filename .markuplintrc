@@ -1,4 +1,11 @@
 {
-  "extends": ["markuplint:recommended-static-html"],
-  "excludeFiles": ["**/node_modules/**", "**/dist/**", "coverage/**"]
+  "extends": [
+    "markuplint:recommended-static-html"
+  ],
+  "excludeFiles": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "coverage/**",
+    "storybook-static/**"
+  ]
 }
