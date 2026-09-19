@@ -1,5 +1,6 @@
 // Runs with bun.
 import { expect, test } from 'vitest'
+
 import plugin, { isNgComment } from './plugin'
 
 test('drops comments that start with the ng prefix', () => {
