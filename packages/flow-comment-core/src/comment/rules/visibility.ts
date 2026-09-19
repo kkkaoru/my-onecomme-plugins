@@ -3,8 +3,8 @@
 // conditionals, so the whole rule is readable in a single place.
 
 import type { FlowConfig } from '../../settings/config'
-import { isCard } from '../model/comment'
 import type { FlowComment } from '../model/comment'
+import { isCard } from './style'
 
 export interface CommentVisibility {
   readonly avatar: boolean

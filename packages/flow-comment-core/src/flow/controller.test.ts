@@ -60,8 +60,11 @@ const createTestFlow = (root: HTMLElement, settings: FlowConfig): FlowController
 
 const config = (): FlowConfig => sanitizeConfig({ durationMs: DURATION, lanes: 3 })
 
+const propertiesOf = (index: number): readonly string[] =>
+  Object.keys(recorded[index]?.keyframes[0] ?? { transform: '' })
+
 const transformsOf = (index: number): readonly string[] =>
-  recorded[index]?.keyframes.map((frame) => String(frame.transform)) ?? []
+  recorded[index]?.keyframes.map((frame) => String(frame['transform'])) ?? []
 
 const settle = async (): Promise<void> => {
   await Promise.resolve()
@@ -122,7 +125,7 @@ test('animates from the right edge to past the left edge', () => {
   const root = createRootElement()
   const flow = createTestFlow(root, config())
   flow.push({ html: 'a', id: '1', name: 'n' })
-  expect(transformsOf(0)).toStrictEqual(['translateX(1000px)', 'translateX(-200px)'])
+  expect(transformsOf(0)).toStrictEqual(['translate3d(1000px, 0, 0)', 'translate3d(-200px, 0, 0)'])
 })
 
 test('uses the configured duration and linear easing', () => {
@@ -142,7 +145,7 @@ test('animates in the opposite direction when configured', () => {
   const root = createRootElement()
   const flow = createTestFlow(root, sanitizeConfig({ direction: 'ltr', durationMs: DURATION }))
   flow.push({ html: 'a', id: '1', name: 'n' })
-  expect(transformsOf(0)).toStrictEqual(['translateX(-200px)', 'translateX(1000px)'])
+  expect(transformsOf(0)).toStrictEqual(['translate3d(-200px, 0, 0)', 'translate3d(1000px, 0, 0)'])
 })
 
 test('places the item in the lane it was assigned', () => {
@@ -225,4 +228,14 @@ test('does not start an animation after destroy', () => {
   flow.destroy()
   flow.push({ html: 'a', id: '1', name: 'n' })
   expect(recorded.length).toBe(0)
+})
+
+// 位置は transform だけを動かす。レイアウトを触ると毎フレーム再計算になる。
+test('animates only the transform property', () => {
+  expect.hasAssertions()
+  const root = createRootElement()
+  const flow = createTestFlow(root, config())
+  flow.push({ html: 'a', id: '1', name: 'n' })
+  expect(propertiesOf(0)).toStrictEqual(['transform'])
+  expect(transformsOf(0)[0]).toContain('translate3d')
 })

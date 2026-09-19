@@ -8,6 +8,12 @@
     "./flow": "./src/flow/controller.ts",
     "./motion": "./src/motion/flow.ts",
     "./settings": "./src/settings/config.ts",
-    "./variables": "./src/settings/variables.ts"
+    "./variables": "./src/settings/variables.ts",
+    "./fields": "./src/settings/fields.ts",
+    "./samples": "./src/comment/samples.ts",
+    "./fonts": "./src/settings/fonts.ts"
+  },
+  "scripts": {
+    "tsc": "tsc -p tsconfig.json"
   }
 }

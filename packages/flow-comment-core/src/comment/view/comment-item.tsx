@@ -4,11 +4,10 @@
 import type { ReactElement } from 'react'
 
 import type { FlowConfig } from '../../settings/config'
-import { isCard } from '../model/comment'
 import type { FlowComment } from '../model/comment'
 import type { FormatLabel } from '../rules/label'
 import { selectLabel } from '../rules/label'
-import { selectBodyStyle, selectItemStyle } from '../rules/style'
+import { cardColorsOf, selectBodyStyle, selectItemStyle } from '../rules/style'
 import { selectVisibility } from '../rules/visibility'
 import { AuthorName, Avatar, Badge, CommentBody, PaidLabel } from './parts'
 
@@ -31,10 +30,10 @@ export const CommentItem = ({
   formatLabel,
   lane,
 }: CommentItemProps): ReactElement => {
-  const card = isCard(comment)
+  const colors = cardColorsOf(comment)
   const visibility = selectVisibility(comment, config)
   const { avatarUrl } = comment
-  const nameColor = comment.colors?.authorNameTextColor ?? config.nameColor
+  const nameColor = colors?.authorNameTextColor ?? config.nameColor
   return (
     <div
       className="fc-item"
@@ -42,7 +41,7 @@ export const CommentItem = ({
       data-id={comment.id}
       data-lane={String(lane)}
       data-member={String(comment.isMember === true)}
-      style={{ ...selectItemStyle(config, card), ...selectBodyStyle(comment.colors) }}
+      style={{ ...selectItemStyle(config, colors !== undefined), ...selectBodyStyle(colors) }}
     >
       {avatarUrl === undefined ? null : (
         <Avatar alt={comment.name} url={avatarUrl} visible={visibility.avatar} />
@@ -50,7 +49,7 @@ export const CommentItem = ({
       {visibility.badges
         ? (comment.badges ?? []).map((badge) => <Badge badge={badge} key={badge.label} />)
         : null}
-      <PaidLabel colors={comment.colors} label={labelTextOf(comment, formatLabel)} />
+      <PaidLabel colors={colors} label={labelTextOf(comment, formatLabel)} />
       <AuthorName color={nameColor} name={comment.name} visible={visibility.name} />
       <CommentBody color={config.textColor} html={comment.html} />
     </div>

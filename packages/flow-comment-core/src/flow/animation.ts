@@ -8,9 +8,11 @@ import { devicePixelRatioOf } from './geometry'
 import { addItem, removeItem } from './items'
 import type { FlowItem, FlowState, MountedItem } from './types'
 
+// translate3d で合成レイヤーに載せる。位置は transform だけなので、動いている間も
+// レイアウトも描き直しも走らない。
 const keyframesOf = (from: number, to: number): Keyframe[] => [
-  { transform: `translateX(${px(from)})` },
-  { transform: `translateX(${px(to)})` },
+  { transform: `translate3d(${px(from)}, 0, 0)` },
+  { transform: `translate3d(${px(to)}, 0, 0)` },
 ]
 
 const animateItem = (state: FlowState, mounted: MountedItem): FlowItem => {
@@ -24,7 +26,7 @@ const animateItem = (state: FlowState, mounted: MountedItem): FlowItem => {
   const from = quantizeToDevicePixel(startX, ratio)
   const to = quantizeToDevicePixel(endX, ratio)
   state.root.append(mounted.host)
-  element.style.transform = `translateX(${px(from)})`
+  element.style.transform = `translate3d(${px(from)}, 0, 0)`
   // Promoted to its own layer only while moving, so painting happens once.
   element.style.willChange = 'transform'
   const animation = element.animate(keyframesOf(from, to), {

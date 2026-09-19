@@ -1,9 +1,11 @@
+import { exercise } from '@testing/react'
 // @vitest-environment happy-dom
 // Runs with bun.
+import { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { expect, test } from 'vitest'
 
-import { sanitizeConfig } from '../../settings/config'
+import { DEFAULT_CONFIG, sanitizeConfig } from '../../settings/config'
 import type { FlowComment } from '../model/comment'
 import type { FormatLabel } from '../rules/label'
 import { CommentItem } from './comment-item'
@@ -16,14 +18,17 @@ const elementFor = (
 ): HTMLDivElement => {
   const host = document.createElement('div')
   document.body.append(host)
-  createRoot(host).render(
-    <CommentItem
-      comment={comment}
-      config={sanitizeConfig(overrides)}
-      formatLabel={formatLabel}
-      lane={0}
-    />,
-  )
+  // React 19 の createRoot は同期に描画しないので act で流し切る。
+  act(() => {
+    createRoot(host).render(
+      <CommentItem
+        comment={comment}
+        config={sanitizeConfig(overrides)}
+        formatLabel={formatLabel}
+        lane={0}
+      />,
+    )
+  })
   const element = host.firstElementChild
   if (!(element instanceof HTMLDivElement)) {
     throw new Error('CommentItem did not render a div')
@@ -106,10 +111,10 @@ test('flags gift and member on the item dataset', () => {
   expect.hasAssertions()
   const item = elementFor(comment({ isGift: true, isMember: true }))
   expect([
-    item.dataset.gift,
-    item.dataset.member,
-    item.dataset.lane,
-    item.dataset.id,
+    item.dataset['gift'],
+    item.dataset['member'],
+    item.dataset['lane'],
+    item.dataset['id'],
   ]).toStrictEqual(['true', 'true', '0', '1'])
 })
 
@@ -144,7 +149,10 @@ test('applies the header colour to the amount badge', () => {
 test('leaves the look alone without service colours', () => {
   expect.hasAssertions()
   const item = elementFor(comment({}))
-  expect([item.style.background, item.style.color]).toStrictEqual(['', '#333333'])
+  expect([
+    item.style.background,
+    item.querySelector<HTMLElement>('.fc-text')?.style.color,
+  ]).toStrictEqual(['', DEFAULT_CONFIG.textColor])
 })
 
 test('shows the paid author for a card by default', () => {
@@ -154,4 +162,21 @@ test('shows the paid author for a card by default', () => {
     item.querySelector('.fc-avatar') === null,
     item.querySelector('.fc-name') === null,
   ]).toStrictEqual([false, false])
+})
+
+// React Compiler の覚えた値は、同じ props と変えた props の両方で試す。
+test('renders through unchanged and changed props', () => {
+  expect.hasAssertions()
+  const plain = comment({})
+  const member = comment({ badges: [{ label: 'メンバー' }], isMember: true, name: 'ゆず' })
+  const container = exercise(
+    <CommentItem comment={plain} config={sanitizeConfig({})} formatLabel={formatLabel} lane={0} />,
+    <CommentItem
+      comment={member}
+      config={sanitizeConfig({ showName: false })}
+      formatLabel={formatLabel}
+      lane={1}
+    />,
+  )
+  expect(container.querySelector('.fc-item')).not.toBeNull()
 })

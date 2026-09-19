@@ -29,7 +29,3 @@ export interface FlowComment {
   readonly name: string
   readonly paidText?: string | undefined
 }
-
-// A paid comment carries the service's own colors, so it renders as a card and
-// has its own visibility switches.
-export const isCard = (comment: FlowComment): boolean => comment.colors !== undefined

@@ -2,13 +2,25 @@
 import { expect, test } from 'vitest'
 
 import { sanitizeConfig } from '../../settings/config'
+import type { FlowComment } from '../model/comment'
 import {
+  GIFT_COLORS,
+  MEMBER_COLORS,
   THICK_OUTLINE_PX,
+  cardColorsOf,
+  isCard,
   selectBodyStyle,
   selectItemStyle,
   selectShadow,
   selectStroke,
 } from './style'
+
+const comment = (overrides: Partial<FlowComment>): FlowComment => ({
+  html: 'a',
+  id: '1',
+  name: 'n',
+  ...overrides,
+})
 
 const shadowOf = (overrides: Record<string, unknown>): string =>
   selectShadow(sanitizeConfig({ ...overrides, showShadow: true }))
@@ -120,4 +132,23 @@ test('leaves the body unset without service colours', () => {
   expect.hasAssertions()
   const empty = selectBodyStyle({})
   expect([empty.background, empty.color]).toStrictEqual([undefined, undefined])
+})
+
+// メンシ加入とギフトはサービスの色を持たないので、既定のカード色で出す。
+test('gives membership and gift comments a card color', () => {
+  expect.hasAssertions()
+  expect(cardColorsOf(comment({}))).toBeUndefined()
+  expect(cardColorsOf(comment({ membership: '新規メンバー' }))).toBe(MEMBER_COLORS)
+  expect(cardColorsOf(comment({ isGift: true }))).toBe(GIFT_COLORS)
+  expect(cardColorsOf(comment({ isGiftReceiver: true }))).toBe(GIFT_COLORS)
+  expect(cardColorsOf(comment({ colors: { bodyTextColor: '#123456' } }))).toStrictEqual({
+    bodyTextColor: '#123456',
+  })
+})
+
+test('treats a membership or gift comment as a card', () => {
+  expect.hasAssertions()
+  expect(isCard(comment({ membership: '新規メンバー' }))).toBe(true)
+  expect(isCard(comment({ isGift: true }))).toBe(true)
+  expect(isCard(comment({}))).toBe(false)
 })

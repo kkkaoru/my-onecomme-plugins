@@ -6,12 +6,42 @@ import type { CSSProperties } from 'react'
 
 import type { FlowConfig } from '../../settings/config'
 import { px } from '../../units'
-import type { FlowColors } from '../model/comment'
+import type { FlowColors, FlowComment } from '../model/comment'
 
 // Past this width the outline is expensive to rasterize and a shadow would add
 // a second full paint over it, so the shadow is dropped.
 // ponytail: fixed threshold, make it a setting only if someone needs it.
 const THICK_OUTLINE_PX = 6
+
+// サービスが色を送らないメンシ加入・メンシギフトは、YouTube のカードに寄せた色で出す。
+export const MEMBER_COLORS: FlowColors = {
+  authorNameTextColor: '#ffffff',
+  bodyBackgroundColor: 'rgb(16, 117, 22)',
+  bodyTextColor: '#ffffff',
+  headerBackgroundColor: 'rgb(16, 117, 22)',
+  headerTextColor: '#ffffff',
+}
+
+export const GIFT_COLORS: FlowColors = {
+  authorNameTextColor: '#ffffff',
+  bodyBackgroundColor: 'rgb(30, 136, 229)',
+  bodyTextColor: '#ffffff',
+  headerBackgroundColor: 'rgb(30, 136, 229)',
+  headerTextColor: '#ffffff',
+}
+
+// カードの色。スパチャはサービスの色、メンシ加入とギフトは既定色を使う。
+export const cardColorsOf = (comment: FlowComment): FlowColors | undefined => {
+  if (comment.colors !== undefined) {
+    return comment.colors
+  }
+  if (comment.isGift === true || comment.isGiftReceiver === true) {
+    return GIFT_COLORS
+  }
+  return comment.membership === undefined ? undefined : MEMBER_COLORS
+}
+
+export const isCard = (comment: FlowComment): boolean => cardColorsOf(comment) !== undefined
 
 const isFlatShadow = (config: FlowConfig): boolean =>
   config.shadowOffsetXPx === 0 && config.shadowOffsetYPx === 0 && config.shadowBlurPx === 0

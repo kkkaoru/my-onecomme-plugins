@@ -31,7 +31,7 @@ test('falls back to the documented defaults', () => {
     paddingLeftPx: 14,
     paddingRightPx: 14,
     paddingTopPx: 5,
-    shadowBlurPx: 0,
+    shadowBlurPx: 1,
     shadowColor: '#000000',
     shadowOffsetXPx: 1,
     shadowOffsetYPx: 1,
@@ -41,7 +41,7 @@ test('falls back to the documented defaults', () => {
     showPaidAvatar: true,
     showPaidName: true,
     showShadow: false,
-    textColor: '#333333',
+    textColor: '#ffffff',
   })
 })
 
@@ -71,7 +71,7 @@ test('parses every supported css variable', () => {
     '--fc-shadow-y': '2',
     '--fc-show-name': 'true',
     '--fc-show-shadow': 'true',
-    '--fc-text-color': '#333333',
+    '--fc-text-color': '#ffffff',
   })
   expect(readFlowConfig(createVariableLookup(lookup, null))).toStrictEqual({
     direction: 'ltr',
@@ -101,7 +101,7 @@ test('parses every supported css variable', () => {
     showPaidAvatar: true,
     showPaidName: true,
     showShadow: true,
-    textColor: '#333333',
+    textColor: '#ffffff',
   })
 })
 
@@ -169,7 +169,7 @@ test('accepts native boolean and number values', () => {
 test('falls back for values of an unsupported type', () => {
   expect.hasAssertions()
   const config = sanitizeConfig({ lanes: null, showName: null, textColor: null })
-  expect([config.lanes, config.showName, config.textColor]).toStrictEqual([5, false, '#333333'])
+  expect([config.lanes, config.showName, config.textColor]).toStrictEqual([5, false, '#ffffff'])
 })
 
 test('falls back for blank string values', () => {
@@ -192,13 +192,13 @@ test('falls back for blank string values', () => {
     config.outlineColor,
     config.showName,
     config.textColor,
-  ]).toStrictEqual(['Noto Sans JP Variable', '#ffd400', '#000000', false, '#333333'])
+  ]).toStrictEqual(['Noto Sans JP Variable', '#ffd400', '#000000', false, '#ffffff'])
 })
 
 test('uses defaults when no variable and no settings are available', () => {
   expect.hasAssertions()
   const config = readFlowConfig(createVariableLookup(noVariable, null))
-  expect([config.lanes, config.textColor]).toStrictEqual([5, '#333333'])
+  expect([config.lanes, config.textColor]).toStrictEqual([5, '#ffffff'])
 })
 
 test('accepts unknown input shapes', () => {

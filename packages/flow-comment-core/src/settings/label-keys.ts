@@ -1,0 +1,36 @@
+// Runs with bun.
+// 設定項目の見出しに使う辞書キー。文言そのものはアプリの辞書が持つ。
+export const FIELD_LABEL_KEYS = [
+  'fieldDirection',
+  'fieldDirectionRtl',
+  'fieldDirectionLtr',
+  'fieldDurationMs',
+  'fieldLanes',
+  'fieldMaxItems',
+  'fieldFontSizePx',
+  'fieldFontFamily',
+  'fieldFontWeight',
+  'fieldTextColor',
+  'fieldOutlineWidthPx',
+  'fieldOutlineColor',
+  'fieldShowPaidAvatar',
+  'fieldShowPaidName',
+  'fieldShowShadow',
+  'fieldShadowOffsetXPx',
+  'fieldShadowOffsetYPx',
+  'fieldShadowBlurPx',
+  'fieldShadowColor',
+  'fieldOpacity',
+  'fieldItemPaddingTopPx',
+  'fieldItemPaddingRightPx',
+  'fieldItemPaddingBottomPx',
+  'fieldItemPaddingLeftPx',
+  'fieldLaneGapPx',
+  'fieldLaneHeightPx',
+  'fieldShowAvatar',
+  'fieldShowBadges',
+  'fieldShowName',
+  'fieldNameColor',
+] as const
+
+export type FieldLabelKey = (typeof FIELD_LABEL_KEYS)[number]
