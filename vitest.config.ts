@@ -1,30 +1,31 @@
 // Runs with bun.
+// テストは本番と同じ React Compiler の出力で走らせる。
+// カバレッジだけはコンパイラの memo ガードを外して測る（vitest.coverage.config.ts）。
 import { defineConfig } from 'vitest/config'
 
+import { reactPlugins } from './vite.react.ts'
+
 export default defineConfig({
+  plugins: reactPlugins(),
+  resolve: {
+    // テスト用の React ヘルパー（act で流し切る）は全テストで共有する。
+    alias: { '@testing/react': new URL('testing/react.tsx', import.meta.url).pathname },
+  },
   test: {
     coverage: {
-      // 画面の組み立て（DOM 配線・要素の生成・イベント登録）はブラウザでしか意味を持たない
-      // ため計測対象外にする。判定や変換のロジックは ui/ 直下・settings/・core に置き、
-      // そこはテストで 95% 以上を保つ。新しい配線ファイルを足したらここに追加する。
+      // 入口（*-main）とプラグイン本体はブラウザ／わんコメ側の起動コードなので、
+      // それ以外の UI コンポーネントとロジックはすべてテストで 95% 以上を保つ。
       exclude: [
+        '**/*.d.ts',
+        '**/*.stories.tsx',
         '**/*.test.ts',
-        '**/*.stories.ts',
-        '**/src/plugin.ts',
+        '**/*.test.tsx',
         '**/src/*-main.ts',
-        'apps/flow-comment/src/ui/elements.ts',
-        'apps/flow-comment/src/ui/field-values.ts',
-        'apps/flow-comment/src/ui/fonts.ts',
-        'apps/flow-comment/src/ui/form-controls.ts',
-        'apps/flow-comment/src/ui/form-fields.ts',
-        'apps/flow-comment/src/ui/json-io.ts',
-        'apps/flow-comment/src/ui/model-tools.ts',
-        'apps/flow-comment/src/ui/panels.ts',
-        'apps/flow-comment/src/ui/presets.ts',
-        'apps/flow-comment/src/ui/preview.ts',
-        'apps/flow-comment/src/ui/screen.ts',
+        '**/src/*-main.tsx',
+        '**/src/plugin.ts',
+        'coverage/**',
       ],
-      include: ['apps/*/src/**/*.ts', 'packages/*/src/**/*.ts'],
+      include: ['apps/*/src/**/*.{ts,tsx}', 'packages/*/src/**/*.{ts,tsx}'],
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
       thresholds: {
@@ -34,6 +35,7 @@ export default defineConfig({
         statements: 95,
       },
     },
-    include: ['apps/*/src/**/*.test.ts', 'packages/*/src/**/*.test.ts'],
+    include: ['apps/*/src/**/*.test.{ts,tsx}', 'packages/*/src/**/*.test.{ts,tsx}'],
+    setupFiles: ['vitest.setup.ts'],
   },
 })
