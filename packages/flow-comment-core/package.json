@@ -1,0 +1,13 @@
+{
+  "name": "@my-onecomme-plugins/flow-comment-core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./comment": "./src/comment/view/comment-item.tsx",
+    "./flow": "./src/flow/controller.ts",
+    "./motion": "./src/motion/flow.ts",
+    "./settings": "./src/settings/config.ts",
+    "./variables": "./src/settings/variables.ts"
+  }
+}
