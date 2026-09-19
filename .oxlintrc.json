@@ -1,6 +1,16 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["typescript", "import", "promise", "node", "unicorn", "oxc", "jsdoc", "vitest"],
+  "plugins": [
+    "typescript",
+    "import",
+    "promise",
+    "node",
+    "unicorn",
+    "oxc",
+    "jsdoc",
+    "vitest",
+    "react"
+  ],
   "categories": {
     "correctness": "error",
     "suspicious": "error",
@@ -51,6 +61,39 @@
     "typescript/no-explicit-any": "error",
     "typescript/no-non-null-assertion": "error",
     "unicorn/prefer-node-protocol": "error",
+    "react/error-boundaries": "error",
+    "react/exhaustive-deps": "warn",
+    "react/globals": "error",
+    "react/immutability": "error",
+    "react/incompatible-library": "warn",
+    "react/preserve-manual-memoization": "error",
+    "react/purity": "error",
+    "react/refs": "error",
+    "react/rules-of-hooks": "error",
+    "react/set-state-in-effect": "error",
+    "react/set-state-in-render": "error",
+    "react/static-components": "error",
+    "react/unsupported-syntax": "warn",
+    "react/use-memo": "error",
+    "react/jsx-filename-extension": [
+      "error",
+      {
+        "extensions": [".tsx"]
+      }
+    ],
+    "react/function-component-definition": [
+      "error",
+      {
+        "namedComponents": "arrow-function",
+        "unnamedComponents": "arrow-function"
+      }
+    ],
+    "react/jsx-max-depth": [
+      "error",
+      {
+        "max": 6
+      }
+    ],
     "max-classes-per-file": ["error", 1],
     "max-depth": ["error", 4],
     "max-lines": [
@@ -101,14 +144,21 @@
     "vitest/require-top-level-describe": "off",
     "vitest/require-test-timeout": "off",
     "import/no-relative-parent-imports": "off",
-    "node/no-sync": "off"
+    "node/no-sync": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/forbid-component-props": "off",
+    "react/jsx-no-literals": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/no-danger": "off",
+    "react/no-multi-comp": "off"
   },
   "overrides": [
     {
       "files": ["**/*.d.ts"],
       "rules": {
         "no-implicit-globals": "off",
-        "no-redeclare": "off"
+        "no-redeclare": "off",
+        "no-var": "off"
       }
     },
     {
@@ -144,7 +194,11 @@
       "rules": {
         "import/no-nodejs-modules": "off",
         "node/no-top-level-await": "off",
-        "no-await-in-loop": "off"
+        "no-await-in-loop": "off",
+        "no-magic-numbers": "off",
+        "sort-keys": "off",
+        "prefer-template": "off",
+        "unicorn/no-process-exit": "off"
       }
     }
   ]
