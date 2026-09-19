@@ -8,5 +8,8 @@
     ".": {
       "types": "./src/index.d.ts"
     }
+  },
+  "scripts": {
+    "tsc": "tsc -p tsconfig.json"
   }
 }
