@@ -1,32 +1,10 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["ESNext", "DOM"],
-    "types": ["node"],
-    "module": "Preserve",
-    "moduleResolution": "bundler",
-    "moduleDetection": "force",
-    "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "noImplicitOverride": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "skipLibCheck": true,
-    "jsx": "react-jsx"
-  },
+  "extends": "./tsconfig.base.json",
   "include": [
-    "vitest.config.ts",
-    "vitest.storybook.config.ts",
-    "apps/*/src/**/*.ts",
-    "apps/*/src/**/*.tsx",
-    "packages/*/src/**/*.ts",
-    "packages/*/src/**/*.tsx",
-    "packages/*/src/**/*.d.ts"
-  ],
-  "exclude": ["node_modules", "dist", "coverage"]
+    ".storybook/**/*.ts",
+    "testing/**/*.d.ts",
+    "testing/**/*.tsx",
+    "vite*.ts",
+    "vitest*.ts"
+  ]
 }

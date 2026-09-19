@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "bun build src/plugin.ts --outdir dist/example-plugin --target node --format cjs --footer 'module.exports = module.exports.default' && cp -R static/. dist/example-plugin/"
+    "build": "bun build src/plugin.ts --outdir dist/example-plugin --target node --format cjs --footer 'module.exports = module.exports.default' && cp -R static/. dist/example-plugin/",
+    "tsc": "tsc -p tsconfig.json"
   }
 }
