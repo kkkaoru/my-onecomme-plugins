@@ -28,20 +28,66 @@
 除外設定は `.markuplintrc` の `excludeFiles`、`.oxfmtrc.json` と `.oxlintrc.json` の
 `ignorePatterns` で揃えてある。
 
+## React Compiler
+
+React のコードは Vite の変換時に React Compiler (`babel-plugin-react-compiler`) を通す。
+入口はリポジトリ直下の `vite.react.ts` 1 か所だけ。
+
+- `bun run build` — `apps/*/vite.config.mts` が JSX 変換・Fast Refresh と一緒に載せる
+- `bun run test` — vitest も最適化後のコードで走る
+- `bun run build-storybook` / `bun run storybook` — `.storybook/main.ts` の `viteFinal` で追加
+
+Vite 8 (rolldown) では Babel のパスをプラグインとして渡すため `@rolldown/plugin-babel` を使う。
+コンパイラが最適化を諦める書き方は oxlint が止める (`react/purity` / `react/immutability` /
+`react/refs` / `react/set-state-in-effect` など。深刻度は eslint-plugin-react-hooks の
+recommended-latest に合わせている)。一時的に外したいときはコンポーネントの先頭に
+`"use no memo"` を書く。
+
 ## コマンド
 
-| コマンド                                  | 内容                                                             |
-| ----------------------------------------- | ---------------------------------------------------------------- |
-| `bun install`                             | 依存関係のインストール                                           |
-| `bun run build`                           | 全パッケージをビルド                                             |
-| `bun run tsc`                             | 型チェック                                                       |
-| `bun run lint`                            | oxlint + markuplint                                              |
-| `bun run lint:fix`                        | oxlint --fix (HTML の整形は oxfmt の役割)                        |
-| `bun run format` / `bun run format:check` | oxfmt (JS / TS / HTML)                                           |
-| `bun run test`                            | vitest                                                           |
-| `bun run coverage`                        | カバレッジ (statements/lines/functions/branches すべて 95% 以上) |
+| コマンド                                                   | 内容                                                             |
+| ---------------------------------------------------------- | ---------------------------------------------------------------- |
+| `bun install`                                              | 依存関係のインストール                                           |
+| `bun run build`                                            | 全パッケージをビルド                                             |
+| `bun run tsc`                                              | 型チェック（アプリ・パッケージ・リポジトリ直下をまとめて）       |
+| `bun run tsc:apps` / `bun run tsc:packages`                | アプリ / パッケージだけを型チェック                              |
+| `bun run --filter '@my-onecomme-plugins/flow-comment' tsc` | 1 つのワークスペースだけを型チェック                             |
+| `bun run lint`                                             | oxlint + markuplint                                              |
+| `bun run lint:fix`                                         | oxlint --fix (HTML の整形は oxfmt の役割)                        |
+| `bun run format` / `bun run format:check`                  | oxfmt (JS / TS / HTML)                                           |
+| `bun run test`                                             | vitest                                                           |
+| `bun run coverage`                                         | カバレッジ (statements/lines/functions/branches すべて 95% 以上) |
 
 HTML だけ検査したい場合は `bunx markuplint "**/*.html"`。
+
+## 型チェック
+
+設定は 2 段構えで、厳しいオプションは `tsconfig.base.json` にだけ書く。
+
+- `tsconfig.base.json` — 全ワークスペース共通の `compilerOptions`
+- `tsconfig.json` / `apps/*/tsconfig.json` / `packages/*/tsconfig.json` —
+  それぞれが自分の担当ぶんだけを `include` する
+
+各ワークスペースの `package.json` が `tsc: tsc -p tsconfig.json` を持つので、単位ごとに
+判定できる。`bun run tsc` は全部を順に回す（`.githooks/pre-commit` もこれを見る）。
+
+```sh
+bun run tsc                                      # 全部
+bun run tsc:apps                                 # apps/* だけ
+bun run tsc:packages                             # packages/* だけ
+bun run --filter '@my-onecomme-plugins/flow-comment-core' tsc   # 1 つだけ
+```
+
+厳しさの内訳（`tsconfig.base.json`）:
+
+- `strict` / `noUncheckedIndexedAccess` / `exactOptionalPropertyTypes`
+- `noPropertyAccessFromIndexSignature` — index signature は `x['key']` を強制し、綴り違いを止める
+- `noImplicitReturns` / `noFallthroughCasesInSwitch` / `allowUnreachableCode: false`
+- `erasableSyntaxOnly`（enum や namespace を禁止） / `noUncheckedSideEffectImports`
+- `noUnusedLocals` / `noUnusedParameters`
+
+型定義を持たないグローバルは、使う側の `.d.ts` で補う
+（`testing/globals.d.ts`、`apps/flow-comment/src/local-fonts.d.ts`）。
 
 ## Git フック
 
