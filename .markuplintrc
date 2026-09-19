@@ -1,0 +1,4 @@
+{
+  "extends": ["markuplint:recommended-static-html"],
+  "excludeFiles": ["**/node_modules/**", "**/dist/**", "coverage/**"]
+}
