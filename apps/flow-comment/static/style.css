@@ -1,0 +1,275 @@
+/*
+ * 設定画面のスタイル。
+ * 値は下の CSS 変数だけに集約し、個別の数値をここ以外に書かない。
+ * フォントはテンプレートと同じ Noto Sans JP Variable に固定（fonts.css で読み込む）。
+ */
+:root {
+  /* フォント */
+  --ui-font: 'Noto Sans JP Variable', sans-serif;
+  --ui-font-size: 16px;
+  --ui-font-size-small: 14px;
+  --ui-letter-spacing: 0.01em;
+  --ui-line-height: 1.8;
+
+  /* 余白（これを基準に導出する） */
+  --ui-space: 8px;
+
+  /* 形と色 */
+  --ui-radius: 6px;
+  --ui-border: 1px solid rgb(128 128 128 / 45%);
+  --ui-color-fg: light-dark(#1b1b1f, #f2f2f4);
+  --ui-color-bg: light-dark(#ffffff, #1b1b1f);
+  --ui-color-muted: light-dark(#5a5a63, #b6b6bf);
+  --ui-color-accent: light-dark(#1a5fd0, #7fb2ff);
+
+  /* 操作要素の大きさ（a11y: タップ領域を確保する） */
+  --ui-control-height: 44px;
+  --ui-label-width: 15em;
+
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  padding: calc(var(--ui-space) * 2);
+  font-family: var(--ui-font);
+  font-size: var(--ui-font-size);
+  letter-spacing: var(--ui-letter-spacing);
+  line-height: var(--ui-line-height);
+  color: var(--ui-color-fg);
+  background: var(--ui-color-bg);
+}
+
+h1 {
+  margin: 0 0 var(--ui-space);
+  font-size: calc(var(--ui-font-size) * 1.4);
+}
+
+h2 {
+  margin: calc(var(--ui-space) * 3) 0 var(--ui-space);
+  font-size: calc(var(--ui-font-size) * 1.15);
+}
+
+p {
+  margin: 0 0 var(--ui-space);
+}
+
+/* ---- 操作要素 ---- */
+button,
+input,
+select {
+  box-sizing: border-box;
+  min-height: var(--ui-control-height);
+  padding: 0 calc(var(--ui-space) * 1.5);
+  border: var(--ui-border);
+  border-radius: var(--ui-radius);
+  font-family: inherit;
+  font-size: var(--ui-font-size);
+  letter-spacing: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: transparent;
+}
+
+button {
+  cursor: pointer;
+}
+
+input[type='color'] {
+  padding: 0 calc(var(--ui-space) / 2);
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  min-height: 0;
+  width: calc(var(--ui-space) * 3);
+  height: calc(var(--ui-space) * 3);
+  padding: 0;
+  accent-color: var(--ui-color-accent);
+}
+
+input[type='range'] {
+  min-height: var(--ui-control-height);
+  padding: 0;
+  border: 0;
+  accent-color: var(--ui-color-accent);
+}
+
+:focus-visible {
+  outline: 3px solid var(--ui-color-accent);
+  outline-offset: 2px;
+}
+
+/* ---- プレビュー ---- */
+.preview-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space);
+  align-items: center;
+}
+
+.preview-samples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space);
+}
+
+.preview {
+  position: relative;
+  height: 260px;
+  overflow: hidden;
+  border-radius: var(--ui-radius);
+  background: #1e1e1e;
+}
+
+.preview.is-light {
+  background: #f2f2f2;
+}
+
+.note {
+  font-size: var(--ui-font-size-small);
+  color: var(--ui-color-muted);
+}
+
+/* ---- フォーム ---- */
+.field {
+  display: flex;
+  gap: var(--ui-space);
+  align-items: center;
+  margin: 0 0 var(--ui-space);
+}
+
+.field-wide {
+  align-items: flex-start;
+}
+
+.field > label,
+.field-label {
+  flex: 0 0 var(--ui-label-width);
+}
+
+.field > output {
+  flex: 0 0 calc(var(--ui-space) * 6);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.field > input:not([type='checkbox']):not([type='radio']),
+.field > select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* 影が無効なときは、値を残したまま操作できないことを示す。 */
+.field.is-disabled {
+  opacity: 0.45;
+}
+
+.radio-group {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: calc(var(--ui-space) * 2);
+  align-items: center;
+}
+
+.radio-item {
+  display: inline-flex;
+  gap: var(--ui-space);
+  align-items: center;
+  cursor: pointer;
+}
+
+.actions {
+  display: flex;
+  gap: var(--ui-space);
+  margin-top: calc(var(--ui-space) * 2);
+}
+
+/* ---- フォント候補 ---- */
+.font-picker {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--ui-space);
+  min-width: 0;
+}
+
+.font-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--ui-space) / 2);
+  max-height: calc(var(--ui-space) * 20);
+  overflow-y: auto;
+}
+
+.font-option {
+  min-height: 0;
+  padding: calc(var(--ui-space) / 2) var(--ui-space);
+  font-size: var(--ui-font-size-small);
+}
+
+#status {
+  min-height: var(--ui-line-height);
+}
+
+/* ---- プレビュー内のコメント描画 ---- */
+.fc-item {
+  position: absolute;
+  left: 0;
+  box-sizing: border-box;
+  display: flex;
+  gap: calc(var(--ui-space) / 2);
+  align-items: center;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.fc-avatar {
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.fc-badge {
+  display: inline-flex;
+  align-items: center;
+}
+
+.fc-badge img {
+  height: 1em;
+  width: auto;
+  vertical-align: middle;
+}
+
+.fc-name {
+  margin-right: calc(var(--ui-space) / 2);
+}
+
+.fc-paid {
+  font-weight: bold;
+}
+
+/* ---- JSON 入出力 ---- */
+textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--ui-space);
+  border: var(--ui-border);
+  border-radius: var(--ui-radius);
+  font-family: var(--ui-font);
+  font-size: var(--ui-font-size-small);
+  letter-spacing: var(--ui-letter-spacing);
+  line-height: var(--ui-line-height);
+  color: inherit;
+  background: transparent;
+  resize: vertical;
+}
+
+/* OneComme の標準テーマと同じく、ギフト画像は本文中で少し大きめに出す。 */
+.fc-text .gift-image {
+  height: 2em;
+  width: auto;
+  vertical-align: middle;
+}

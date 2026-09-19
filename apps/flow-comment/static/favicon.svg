@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Flow Comment">
+  <rect width="32" height="32" rx="7" fill="#1b1b1f" />
+  <g stroke="#7fb2ff" stroke-width="2.6" stroke-linecap="round" fill="none">
+    <path d="M27 9H13" />
+    <path d="M27 16H16" />
+    <path d="M27 23H13" />
+  </g>
+  <path d="M11 16 4 12.5v7z" fill="#7fb2ff" />
+</svg>

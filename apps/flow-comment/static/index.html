@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Flow Comment 設定</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./fonts.css" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Flow Comment</h1>
+      <p>
+        コメントが右から左に流れるテンプレートの設定です。保存した内容はプラグインに保存され、
+        テンプレートを読み込んだときに自動で反映されます。
+      </p>
+      <section>
+        <h2>プレビュー</h2>
+        <p class="preview-tools">
+          <span class="field-label">プレビュー背景</span>
+          <label class="radio-item">
+            <input type="radio" name="preview-theme" value="dark" checked />
+            <span>黒系</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="preview-theme" value="light" />
+            <span>白系</span>
+          </label>
+          <span class="note"
+            >（この設定はプレビューの背景だけに影響します。配信の見た目は変わりません）</span
+          >
+        </p>
+        <p id="preview-samples" class="preview-samples"></p>
+        <div id="preview" class="preview"></div>
+      </section>
+      <section>
+        <h2>プリセット</h2>
+        <p>
+          <label for="preset-name">名前</label>
+          <input id="preset-name" type="text" placeholder="例: 夜の配信" />
+          <button id="preset-save" type="button">現在の設定を保存</button>
+        </p>
+        <p>
+          <label for="preset-list">保存済み</label>
+          <select id="preset-list"></select>
+          <button id="preset-load" type="button">読み込む</button>
+          <button id="preset-delete" type="button">削除</button>
+        </p>
+      </section>
+      <section>
+        <h2>JSON 入出力</h2>
+        <p>
+          <button id="io-export" type="button">現在の設定を書き出す</button>
+          <button id="io-copy" type="button">コピー</button>
+          <button id="io-import" type="button">貼り付けた内容を読み込む</button>
+        </p>
+        <p>
+          <label for="io-json">設定 JSON</label>
+          <textarea id="io-json" rows="8" spellcheck="false"></textarea>
+        </p>
+      </section>
+      <form id="form">
+        <h2>表示設定</h2>
+        <div id="fields"></div>
+        <div class="actions">
+          <button type="submit">保存</button>
+          <button id="reset" type="button">初期値に戻す</button>
+        </div>
+      </form>
+      <p id="status" role="status"></p>
+    </main>
+    <script src="./script.js" defer></script>
+  </body>
+</html>
