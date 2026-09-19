@@ -1,0 +1,40 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "import", "promise", "node", "unicorn", "oxc", "jsdoc", "vitest"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "pedantic": "error",
+    "perf": "error",
+    "style": "error",
+    "restriction": "error",
+    "nursery": "error"
+  },
+  "env": {
+    "node": true,
+    "es2024": true
+  },
+  "ignorePatterns": ["**/dist/**", "**/node_modules/**", "**/coverage/**", "**/.vitest/**"],
+  "rules": {
+    "no-console": "off",
+    "no-restricted-imports": ["error", { "paths": ["bun:test"] }],
+    "oxc/no-barrel-file": "error",
+    "typescript/consistent-type-assertions": ["error", { "assertionStyle": "never" }],
+    "typescript/consistent-type-definitions": ["error", "interface"],
+    "typescript/no-explicit-any": "error",
+    "typescript/no-non-null-assertion": "error",
+    "unicorn/prefer-node-protocol": "error",
+    "import/exports-last": "off",
+    "import/no-default-export": "off",
+    "import/no-named-export": "off",
+    "import/prefer-default-export": "off",
+    "no-ternary": "off",
+    "one-var": "off",
+    "typescript/prefer-as-const": "off",
+    "vitest/no-importing-vitest-globals": "off",
+    "vitest/prefer-to-be-falsy": "off",
+    "vitest/prefer-to-be-truthy": "off",
+    "vitest/require-top-level-describe": "off",
+    "vitest/require-test-timeout": "off"
+  }
+}
