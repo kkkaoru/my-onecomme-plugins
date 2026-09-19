@@ -1,0 +1,24 @@
+{
+  "name": "@my-onecomme-plugins/flow-comment-ui",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./controls": "./src/controls/field-control.tsx",
+    "./option-select": "./src/parts/option-select.tsx",
+    "./status-line": "./src/parts/status-line.tsx",
+    "./preview-panel": "./src/panels/preview-panel.tsx",
+    "./api": "./src/api.ts",
+    "./settings-screen": "./src/settings-screen.tsx",
+    "./messages": "./src/messages.ts",
+    "./json-panel": "./src/panels/json-panel.tsx"
+  },
+  "scripts": {
+    "tsc": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@base-ui/react": "1.8.0",
+    "@my-onecomme-plugins/flow-comment-core": "workspace:*",
+    "react": "19.3.0"
+  }
+}
