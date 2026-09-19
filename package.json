@@ -1,0 +1,29 @@
+{
+  "name": "my-onecomme-plugins",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "bun run --filter '*' build",
+    "tsc": "tsc",
+    "lint": "oxlint && markuplint \"**/*.html\"",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.2",
+    "@vitest/coverage-v8": "5.0.1",
+    "markuplint": "5.0.0",
+    "oxfmt": "0.68.0",
+    "oxlint": "1.83.0",
+    "typescript": "7.0.2",
+    "vitest": "5.0.1"
+  }
+}
