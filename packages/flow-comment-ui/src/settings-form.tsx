@@ -1,10 +1,8 @@
-// Runs with bun.
-// 表示設定のフォーム。値はすべて外から渡し、ここでは入力の通知だけをする。
+// Runs with bun. 表示設定のフォーム。値は外から渡し、ここでは入力の通知だけをする。
 import { Button } from '@base-ui/react/button'
 import { FIELD_SPECS } from '@my-onecomme-plugins/flow-comment-core/fields'
 import type { FieldSpec } from '@my-onecomme-plugins/flow-comment-core/fields'
 import type { FieldValue } from '@my-onecomme-plugins/flow-comment-core/settings'
-import { Fragment } from 'react'
 import type { ReactElement } from 'react'
 
 import { FieldControl } from './controls/field-control'
@@ -19,25 +17,95 @@ export interface SettingsFormProps {
   readonly values: FieldValues
 }
 
-// まとまりのある項目（余白・影）は見出しを付けて、何の設定か分かるようにする。
+interface FieldRowProps {
+  readonly disabled: boolean
+  readonly onUpdate: SettingsFormProps['onUpdate']
+  readonly spec: FieldSpec
+  readonly t: Translate
+  readonly values: FieldValues
+}
+
+interface PaddingGroupProps {
+  readonly onUpdate: SettingsFormProps['onUpdate']
+  readonly t: Translate
+  readonly values: FieldValues
+}
+
+interface FormRowProps {
+  readonly heading: MessageKey | undefined
+  readonly onUpdate: SettingsFormProps['onUpdate']
+  readonly shadowOff: boolean
+  readonly spec: FieldSpec
+  readonly t: Translate
+  readonly values: FieldValues
+}
+
 const GROUP_KEYS: Readonly<Record<string, MessageKey>> = {
   padding: 'groupPadding',
   shadow: 'groupShadow',
 }
 
-interface Row {
-  readonly heading: MessageKey | undefined
-  readonly spec: FieldSpec
-}
+const PADDING_SPECS: readonly FieldSpec[] = FIELD_SPECS.filter((spec) => spec.group === 'padding')
 
-const rowsOf = (): readonly Row[] =>
-  FIELD_SPECS.map((spec, index) => ({
-    heading:
-      spec.group !== undefined && spec.group !== FIELD_SPECS[index - 1]?.group
-        ? GROUP_KEYS[spec.group]
-        : undefined,
-    spec,
-  }))
+const headingOf = (spec: FieldSpec, index: number): MessageKey | undefined =>
+  spec.group !== undefined && spec.group !== FIELD_SPECS[index - 1]?.group
+    ? GROUP_KEYS[spec.group]
+    : undefined
+
+const FieldRow = ({ disabled, onUpdate, spec, t, values }: FieldRowProps): ReactElement => (
+  <FieldControl
+    disabled={disabled}
+    onInput={(value) => {
+      onUpdate(spec.key, value)
+    }}
+    spec={spec}
+    t={t}
+    value={values[spec.key] ?? ''}
+  />
+)
+
+const PaddingGroup = ({ onUpdate, t, values }: PaddingGroupProps): ReactElement => (
+  <details className="fc-collapsible">
+    <summary className="fc-collapsible-trigger">{t('groupPadding')}</summary>
+    <div className="fc-collapsible-panel">
+      {PADDING_SPECS.map((spec) => (
+        <FieldRow
+          disabled={false}
+          key={spec.key}
+          onUpdate={onUpdate}
+          spec={spec}
+          t={t}
+          values={values}
+        />
+      ))}
+    </div>
+  </details>
+)
+
+const FormRow = ({
+  heading,
+  onUpdate,
+  shadowOff,
+  spec,
+  t,
+  values,
+}: FormRowProps): ReactElement | null => {
+  if (spec.group === 'padding') {
+    return heading === undefined ? null : <PaddingGroup onUpdate={onUpdate} t={t} values={values} />
+  }
+  return (
+    <>
+      {heading === undefined ? null : <h3 className="group-heading">{t(heading)}</h3>}
+      <FieldRow
+        disabled={spec.group === 'shadow' && shadowOff}
+        onUpdate={onUpdate}
+        spec={spec}
+        t={t}
+        values={values}
+      />
+    </>
+  )
+}
 
 export const SettingsForm = ({
   onReset,
@@ -46,7 +114,6 @@ export const SettingsForm = ({
   t,
   values,
 }: SettingsFormProps): ReactElement => {
-  // 影が OFF のときは、値を残したまま触れないようにする。
   const shadowOff = values['showShadow'] !== true
   return (
     <form
@@ -58,19 +125,16 @@ export const SettingsForm = ({
     >
       <h2>{t('sectionDisplay')}</h2>
       <div className="fc-fields">
-        {rowsOf().map(({ heading, spec }) => (
-          <Fragment key={spec.key}>
-            {heading === undefined ? null : <h3 className="group-heading">{t(heading)}</h3>}
-            <FieldControl
-              disabled={spec.group === 'shadow' && shadowOff}
-              onInput={(value) => {
-                onUpdate(spec.key, value)
-              }}
-              spec={spec}
-              t={t}
-              value={values[spec.key] ?? ''}
-            />
-          </Fragment>
+        {FIELD_SPECS.map((spec, index) => (
+          <FormRow
+            key={spec.key}
+            heading={headingOf(spec, index)}
+            onUpdate={onUpdate}
+            shadowOff={shadowOff}
+            spec={spec}
+            t={t}
+            values={values}
+          />
         ))}
       </div>
       <div className="actions">

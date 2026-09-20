@@ -42,9 +42,18 @@ export const FIELD_SPECS: readonly FieldSpec[] = [
     type: 'range',
   },
   { key: 'lanes', labelKey: 'fieldLanes', max: 50, min: 1, step: 1, type: 'range' },
+  { key: 'laneGapPx', labelKey: 'fieldLaneGapPx', max: 200, min: 0, step: 1, type: 'range' },
+  {
+    key: 'laneHeightPx',
+    labelKey: 'fieldLaneHeightPx',
+    max: 1000,
+    min: 0,
+    step: 1,
+    type: 'range',
+  },
   { key: 'maxItems', labelKey: 'fieldMaxItems', max: 2000, min: 1, step: 1, type: 'range' },
-  { key: 'fontSizePx', labelKey: 'fieldFontSizePx', max: 200, min: 8, step: 1, type: 'range' },
   { key: 'fontFamily', labelKey: 'fieldFontFamily', type: 'font' },
+  { key: 'fontSizePx', labelKey: 'fieldFontSizePx', max: 200, min: 8, step: 1, type: 'range' },
   { key: 'fontWeight', labelKey: 'fieldFontWeight', max: 900, min: 100, step: 100, type: 'range' },
   { key: 'textColor', labelKey: 'fieldTextColor', type: 'color' },
   {
@@ -56,8 +65,6 @@ export const FIELD_SPECS: readonly FieldSpec[] = [
     type: 'range',
   },
   { key: 'outlineColor', labelKey: 'fieldOutlineColor', type: 'color' },
-  { key: 'showPaidAvatar', labelKey: 'fieldShowPaidAvatar', type: 'checkbox' },
-  { key: 'showPaidName', labelKey: 'fieldShowPaidName', type: 'checkbox' },
   { key: 'showShadow', labelKey: 'fieldShowShadow', type: 'checkbox' },
   {
     group: 'shadow',
@@ -124,19 +131,12 @@ export const FIELD_SPECS: readonly FieldSpec[] = [
     step: 1,
     type: 'range',
   },
-  { key: 'laneGapPx', labelKey: 'fieldLaneGapPx', max: 200, min: 0, step: 1, type: 'range' },
-  {
-    key: 'laneHeightPx',
-    labelKey: 'fieldLaneHeightPx',
-    max: 1000,
-    min: 0,
-    step: 1,
-    type: 'range',
-  },
   { key: 'showAvatar', labelKey: 'fieldShowAvatar', type: 'checkbox' },
-  { key: 'showBadges', labelKey: 'fieldShowBadges', type: 'checkbox' },
   { key: 'showName', labelKey: 'fieldShowName', type: 'checkbox' },
   { key: 'nameColor', labelKey: 'fieldNameColor', type: 'color' },
+  { key: 'showBadges', labelKey: 'fieldShowBadges', type: 'checkbox' },
+  { key: 'showPaidAvatar', labelKey: 'fieldShowPaidAvatar', type: 'checkbox' },
+  { key: 'showPaidName', labelKey: 'fieldShowPaidName', type: 'checkbox' },
 ]
 
 export type { FieldOption, FieldSpec }

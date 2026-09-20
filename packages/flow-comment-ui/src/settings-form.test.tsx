@@ -45,6 +45,20 @@ test('renders one row per setting', () => {
   expect(container.querySelectorAll('.field').length).toBe(FIELD_SPECS.length)
 })
 
+test('keeps the padding group folded until it is opened', () => {
+  expect.hasAssertions()
+  const { container } = form()
+  const details = required(
+    container.querySelector<HTMLDetailsElement>('details.fc-collapsible'),
+    'padding',
+  )
+  expect(details.open).toBe(false)
+  expect(details.querySelector('summary')?.textContent).toBe('groupPadding')
+  click(required(details.querySelector('summary'), 'summary'))
+  expect(details.open).toBe(true)
+  expect(details.querySelectorAll('[data-group="padding"]').length).toBe(4)
+})
+
 test('reports an edit with the key of the row', () => {
   expect.hasAssertions()
   const { container, onUpdate } = form()
