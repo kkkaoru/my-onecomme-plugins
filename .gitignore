@@ -150,3 +150,6 @@ vite.config.ts.timestamp-*
 
 # Storybook build output
 storybook-static/
+
+# Patent gazette figures
+docs/patents/**/*.png

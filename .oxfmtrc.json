@@ -11,6 +11,7 @@
     "**/coverage/**",
     "**/.vitest/**",
     "bun.lock",
-    "storybook-static/**"
+    "storybook-static/**",
+    "docs/patents/**"
   ]
 }
