@@ -24,11 +24,14 @@ export const MEMBER_COLORS: FlowColors = {
 
 export const GIFT_COLORS: FlowColors = {
   authorNameTextColor: '#ffffff',
-  bodyBackgroundColor: 'rgb(30, 136, 229)',
+  bodyBackgroundColor: 'rgb(156, 39, 176)',
   bodyTextColor: '#ffffff',
-  headerBackgroundColor: 'rgb(30, 136, 229)',
+  headerBackgroundColor: 'rgb(156, 39, 176)',
   headerTextColor: '#ffffff',
 }
+
+// YouTube live chat paints member names in this green.
+export const MEMBER_NAME_COLOR = '#2ba640'
 
 // カードの色。スパチャはサービスの色、メンシ加入とギフトは既定色を使う。
 export const cardColorsOf = (comment: FlowComment): FlowColors | undefined => {
@@ -42,6 +45,14 @@ export const cardColorsOf = (comment: FlowComment): FlowColors | undefined => {
 }
 
 export const isCard = (comment: FlowComment): boolean => cardColorsOf(comment) !== undefined
+
+export const nameColorOf = (comment: FlowComment, config: FlowConfig): string => {
+  const fromCard = cardColorsOf(comment)?.authorNameTextColor
+  if (fromCard !== undefined) {
+    return fromCard
+  }
+  return comment.isMember === true ? MEMBER_NAME_COLOR : config.nameColor
+}
 
 const isFlatShadow = (config: FlowConfig): boolean =>
   config.shadowOffsetXPx === 0 && config.shadowOffsetYPx === 0 && config.shadowBlurPx === 0

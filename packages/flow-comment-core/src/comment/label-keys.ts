@@ -13,7 +13,6 @@ export const SAMPLE_LABEL_KEYS = [
   'sampleMembershipGift',
   'sampleMember',
   'sampleGift',
-  'sampleGiftReceived',
 ] as const
 
 export type SampleLabelKey = (typeof SAMPLE_LABEL_KEYS)[number]

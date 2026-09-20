@@ -20,7 +20,7 @@ const DEFAULT_OPACITY = 1
 const DEFAULT_MAX_ITEMS = 200
 const DEFAULT_TEXT_COLOR = '#ffffff'
 const DEFAULT_OUTLINE_COLOR = '#000000'
-const DEFAULT_NAME_COLOR = '#ffd400'
+const DEFAULT_NAME_COLOR = '#ffffff'
 const DEFAULT_FONT_FAMILY = 'Noto Sans JP Variable'
 
 // CSS 変数や JSON から来る真偽値の表記ゆれをここで吸収する。

@@ -23,7 +23,7 @@ test('falls back to the documented defaults', () => {
     laneHeightPx: 0,
     lanes: 5,
     maxItems: 200,
-    nameColor: '#ffd400',
+    nameColor: '#ffffff',
     opacity: 1,
     outlineColor: '#000000',
     outlineWidthPx: 2,
@@ -192,7 +192,7 @@ test('falls back for blank string values', () => {
     config.outlineColor,
     config.showName,
     config.textColor,
-  ]).toStrictEqual(['Noto Sans JP Variable', '#ffd400', '#000000', false, '#ffffff'])
+  ]).toStrictEqual(['Noto Sans JP Variable', '#ffffff', '#000000', false, '#ffffff'])
 })
 
 test('uses defaults when no variable and no settings are available', () => {

@@ -7,7 +7,7 @@ import type { FlowConfig } from '../../settings/config'
 import type { FlowComment } from '../model/comment'
 import type { FormatLabel } from '../rules/label'
 import { selectLabel } from '../rules/label'
-import { cardColorsOf, selectBodyStyle, selectItemStyle } from '../rules/style'
+import { cardColorsOf, nameColorOf, selectBodyStyle, selectItemStyle } from '../rules/style'
 import { selectVisibility } from '../rules/visibility'
 import { AuthorName, Avatar, Badge, CommentBody, PaidLabel } from './parts'
 
@@ -33,7 +33,7 @@ export const CommentItem = ({
   const colors = cardColorsOf(comment)
   const visibility = selectVisibility(comment, config)
   const { avatarUrl } = comment
-  const nameColor = colors?.authorNameTextColor ?? config.nameColor
+  const nameColor = nameColorOf(comment, config)
   return (
     <div
       className="fc-item"

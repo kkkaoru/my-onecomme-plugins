@@ -6,9 +6,11 @@ import type { FlowComment } from '../model/comment'
 import {
   GIFT_COLORS,
   MEMBER_COLORS,
+  MEMBER_NAME_COLOR,
   THICK_OUTLINE_PX,
   cardColorsOf,
   isCard,
+  nameColorOf,
   selectBodyStyle,
   selectItemStyle,
   selectShadow,
@@ -151,4 +153,15 @@ test('treats a membership or gift comment as a card', () => {
   expect(isCard(comment({ membership: '新規メンバー' }))).toBe(true)
   expect(isCard(comment({ isGift: true }))).toBe(true)
   expect(isCard(comment({}))).toBe(false)
+})
+
+test('uses YouTube green for a member name without a card colour', () => {
+  expect.hasAssertions()
+  expect(nameColorOf(comment({ isMember: true }), sanitizeConfig({}))).toBe(MEMBER_NAME_COLOR)
+  expect(nameColorOf(comment({}), sanitizeConfig({}))).toBe('#ffffff')
+})
+
+test('paints gifts in YouTube purple', () => {
+  expect.hasAssertions()
+  expect(GIFT_COLORS.bodyBackgroundColor).toBe('rgb(156, 39, 176)')
 })

@@ -53,7 +53,19 @@ test('includes a plain sample and the membership kinds', () => {
 test('includes the gift kinds', () => {
   expect.hasAssertions()
   const labels = PREVIEW_SAMPLES.map((sample) => sample.labelKey)
-  expect(labels).toContain('sampleMember')
-  expect(labels).toContain('sampleGift')
-  expect(labels).toContain('sampleGiftReceived')
+  expect(labels.filter((key) => key === 'sampleMember')).toStrictEqual(['sampleMember'])
+  expect(labels.filter((key) => key === 'sampleGift')).toStrictEqual(['sampleGift'])
+})
+
+test('puts a gift image in gift samples', () => {
+  expect.hasAssertions()
+  const gift = PREVIEW_SAMPLES.find((sample) => sample.labelKey === 'sampleGift')
+  expect(gift?.comment.isGift).toBe(true)
+  expect(gift?.comment.html.slice(0, 4)).toBe('<img')
+})
+
+test('gives membership samples a badge image', () => {
+  expect.hasAssertions()
+  const member = PREVIEW_SAMPLES.find((sample) => sample.labelKey === 'sampleMember')
+  expect(member?.comment.badges?.[0]?.url?.slice(0, 14)).toBe('data:image/svg')
 })

@@ -1,6 +1,4 @@
-// Runs with bun.
-// Preview data. Fake users and the YouTube super chat tiers, kept apart from the
-// UI so the samples can change without touching components.
+// Runs with bun. Preview data. Fake users and YouTube super chat tiers.
 import type { SampleLabelKey } from './label-keys'
 import type { FlowComment } from './model/comment'
 
@@ -42,8 +40,10 @@ const JOIN_USER = 0
 const MEMBER_GIFT_USER = 1
 const MEMBER_USER = 2
 const GIFT_USER = 3
-const GIFT_RECEIVER_USER = 4
-const NORMAL_USER = 5
+const NORMAL_USER = 4
+
+const MEMBER_BADGE_URL = avatarFor('M', '#2ba640')
+const GIFT_IMAGE_URL = avatarFor('G', '#9c27b0')
 
 const userAt = (index: number): FakeUser =>
   FAKE_USERS[index % FAKE_USERS.length] ?? { avatarUrl: avatarFor('？', '#555555'), name: 'ゲスト' }
@@ -100,7 +100,7 @@ const PREVIEW_SAMPLES: readonly PreviewSample[] = [
   fixedSample(
     {
       avatarUrl: userAt(JOIN_USER).avatarUrl,
-      badges: [{ label: 'メンバー' }],
+      badges: [{ label: 'メンバー', url: MEMBER_BADGE_URL }],
       html: 'はじめまして',
       id: 'sample-join',
       isMember: true,
@@ -111,9 +111,9 @@ const PREVIEW_SAMPLES: readonly PreviewSample[] = [
   ),
   fixedSample(
     {
-      badges: [{ label: 'ギフト' }],
+      badges: [{ label: 'ギフト', url: GIFT_IMAGE_URL }],
       giftCount: 1,
-      html: 'メンバーシップ ギフトを 1 個贈りました',
+      html: `<img alt="ギフト" class="gift-image" src="${GIFT_IMAGE_URL}" /> メンバーシップ ギフトを 1 個贈りました`,
       id: 'sample-member-gift',
       isGift: true,
       isMember: true,
@@ -124,7 +124,7 @@ const PREVIEW_SAMPLES: readonly PreviewSample[] = [
   fixedSample(
     {
       avatarUrl: userAt(MEMBER_USER).avatarUrl,
-      badges: [{ label: 'メンバー' }],
+      badges: [{ label: 'メンバー', url: MEMBER_BADGE_URL }],
       html: 'いつもありがとう',
       id: 'sample-member',
       isMember: true,
@@ -134,23 +134,14 @@ const PREVIEW_SAMPLES: readonly PreviewSample[] = [
   ),
   fixedSample(
     {
-      html: 'プレゼント',
+      avatarUrl: userAt(GIFT_USER).avatarUrl,
+      html: `<img alt="ギフト" class="gift-image" src="${GIFT_IMAGE_URL}" /> プレゼント`,
       id: 'sample-gift',
       isGift: true,
       name: userAt(GIFT_USER).name,
-      paidText: '¥500',
+      paidText: 'ギフト',
     },
     'sampleGift',
-  ),
-  fixedSample(
-    {
-      html: 'メンバーシップを受け取りました',
-      id: 'sample-gift-receiver',
-      isGiftReceiver: true,
-      isMember: true,
-      name: userAt(GIFT_RECEIVER_USER).name,
-    },
-    'sampleGiftReceived',
   ),
 ]
 

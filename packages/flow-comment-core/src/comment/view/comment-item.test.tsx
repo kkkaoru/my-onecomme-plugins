@@ -81,6 +81,15 @@ test('omits the avatar when the comment has no image', () => {
   expect(elementFor(comment({}), { showAvatar: true }).querySelector('.fc-avatar')).toBeNull()
 })
 
+test('paints a member name in YouTube green', () => {
+  expect.hasAssertions()
+  expect(
+    elementFor(comment({ isMember: true, name: 'かえで' }), {
+      showName: true,
+    }).querySelector<HTMLElement>('.fc-name')?.style.color,
+  ).toBe('#2ba640')
+})
+
 test('renders a text badge without an image', () => {
   expect.hasAssertions()
   expect(
