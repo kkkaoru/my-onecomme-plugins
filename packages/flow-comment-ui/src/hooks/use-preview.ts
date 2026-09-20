@@ -1,7 +1,7 @@
 import type { FormatLabel } from '@my-onecomme-plugins/flow-comment-core/comment'
 import { createFlow } from '@my-onecomme-plugins/flow-comment-core/flow'
 import type { FlowController } from '@my-onecomme-plugins/flow-comment-core/flow'
-import type { PreviewSample } from '@my-onecomme-plugins/flow-comment-core/samples'
+import type { PreviewSample, SampleLabelKey } from '@my-onecomme-plugins/flow-comment-core/samples'
 import { PREVIEW_SAMPLES } from '@my-onecomme-plugins/flow-comment-core/samples'
 import {
   createVariableLookup,
@@ -15,6 +15,12 @@ import { useCallback, useEffect, useRef } from 'react'
 
 const PREVIEW_INTERVAL_MS = 900
 
+export interface PreviewOptions {
+  readonly enabled: ReadonlySet<SampleLabelKey>
+  readonly formatLabel: FormatLabel
+  readonly settings: FlowConfig
+}
+
 export interface PreviewApi {
   readonly host: (element: HTMLElement | null) => (() => void) | undefined
   readonly push: (sample: PreviewSample) => void
@@ -24,16 +30,25 @@ export interface PreviewApi {
 const readVariable = (name: string): string =>
   globalThis.getComputedStyle(document.documentElement).getPropertyValue(name)
 
-export const usePreview = (settings: FlowConfig, formatLabel: FormatLabel): PreviewApi => {
+const activeSamples = (enabled: ReadonlySet<SampleLabelKey>): readonly PreviewSample[] =>
+  PREVIEW_SAMPLES.filter((sample) => enabled.has(sample.labelKey))
+
+const sampleAt = (list: readonly PreviewSample[], index: number): PreviewSample | undefined =>
+  list.length === 0 ? undefined : list[index % list.length]
+
+export const usePreview = ({ enabled, formatLabel, settings }: PreviewOptions): PreviewApi => {
   const flow = useRef<FlowController | null>(null)
   const count = useRef(0)
+  const enabledRef = useRef(enabled)
+  useEffect(() => {
+    enabledRef.current = enabled
+  }, [enabled])
 
   const host = useCallback(
     (element: HTMLElement | null): (() => void) | undefined => {
       if (element === null) {
         return
       }
-      // 設定は次の commit で流し込むので、ここでは既定値で作り始める。
       const controller = createFlow(
         element,
         readFlowConfig(createVariableLookup(readVariable, null)),
@@ -41,12 +56,11 @@ export const usePreview = (settings: FlowConfig, formatLabel: FormatLabel): Prev
       )
       flow.current = controller
       const timer = globalThis.setInterval(() => {
-        // 見えていない間は流さない。溜め込む理由がない。
         if (document.hidden) {
           return
         }
         count.current += 1
-        const sample = PREVIEW_SAMPLES[count.current % PREVIEW_SAMPLES.length]
+        const sample = sampleAt(activeSamples(enabledRef.current), count.current)
         if (sample !== undefined) {
           controller.push({ ...sample.comment, id: `${sample.comment.id}-${count.current}` })
         }
@@ -60,7 +74,6 @@ export const usePreview = (settings: FlowConfig, formatLabel: FormatLabel): Prev
     [formatLabel],
   )
 
-  // 設定はアニメーションの状態そのものなので、commit のあとに流し込む。
   useEffect(() => {
     flow.current?.applyConfig(readFlowConfig(createVariableLookup(readVariable, settings)))
   }, [settings])

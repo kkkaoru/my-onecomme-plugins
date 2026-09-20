@@ -13,7 +13,7 @@ const formatLabel: FormatLabel = (label) => label.text ?? label.kind
 const settings = (overrides: Record<string, unknown> = {}): FlowConfig =>
   sanitizeConfig({ durationMs: 1000, lanes: 3, ...overrides })
 
-test('offers every sample as a button', () => {
+test('offers every sample as a checkbox', () => {
   expect.hasAssertions()
   const container = mount(
     <PreviewPanel t={translate} formatLabel={formatLabel} settings={settings()} />,
@@ -21,13 +21,14 @@ test('offers every sample as a button', () => {
   expect(container.querySelectorAll('.fc-sample').length).toBe(PREVIEW_SAMPLES.length)
 })
 
-test('pushes one sample when its button is pressed', () => {
+test('pushes a sample when its checkbox is turned back on', () => {
   expect.hasAssertions()
   const container = mount(
     <PreviewPanel t={translate} formatLabel={formatLabel} settings={settings()} />,
   )
-  const button = required(container.querySelector('.fc-sample'), 'button')
-  click(button)
+  const box = required(container.querySelector('.fc-sample'), 'sample')
+  click(box)
+  click(box)
   expect(container.querySelectorAll('.fc-item').length).toBe(1)
 })
 
@@ -57,7 +58,9 @@ test('stops the stream when the preview goes away', () => {
   const container = mount(
     <PreviewPanel t={translate} formatLabel={formatLabel} settings={settings()} />,
   )
-  click(required(container.querySelectorAll('.fc-sample')[0], 'sample'))
+  const box = required(container.querySelectorAll('.fc-sample')[0], 'sample')
+  click(box)
+  click(box)
   expect(container.querySelectorAll('.fc-item').length).toBe(1)
   vi.runOnlyPendingTimers()
   vi.useRealTimers()

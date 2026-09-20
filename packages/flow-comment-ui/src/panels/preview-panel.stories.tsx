@@ -42,11 +42,12 @@ export const Default: Story = {
 export const PushingASample: Story = {
   args: { settings: sanitizeConfig({ direction: 'rtl', durationMs: 20_000, lanes: 3 }) },
   play: async ({ canvasElement }): Promise<void> => {
-    const button = canvasElement.querySelector('.fc-sample')
-    if (button === null) {
-      throw new Error('no sample button')
+    const box = canvasElement.querySelector('.fc-sample')
+    if (box === null) {
+      throw new Error('no sample checkbox')
     }
-    await userEvent.click(button)
+    await userEvent.click(box)
+    await userEvent.click(box)
     await expect(canvasElement.querySelectorAll('.fc-item').length).toBe(1)
   },
 }
@@ -67,11 +68,12 @@ export const LightPreview: Story = {
 export const NarrowLanes: Story = {
   args: { settings: sanitizeConfig({ direction: 'ltr', lanes: 1 }) },
   play: async ({ canvasElement }): Promise<void> => {
-    const button = canvasElement.querySelector('.fc-sample')
-    if (button === null) {
-      throw new Error('no sample button')
+    const box = canvasElement.querySelector('.fc-sample')
+    if (box === null) {
+      throw new Error('no sample checkbox')
     }
-    await userEvent.click(button)
+    await userEvent.click(box)
+    await userEvent.click(box)
     await expect(canvasElement.querySelector<HTMLElement>('.fc-item')?.dataset['lane']).toBe('0')
   },
 }

@@ -1,9 +1,11 @@
 // Runs with bun.
 // プレビュー。設定をその場で当てて、見本のコメントを流し続ける。
-import { Button } from '@base-ui/react/button'
+import { Checkbox } from '@base-ui/react/checkbox'
 import { Radio } from '@base-ui/react/radio'
 import { RadioGroup } from '@base-ui/react/radio-group'
 import type { FormatLabel } from '@my-onecomme-plugins/flow-comment-core/comment'
+import type { PreviewSample, SampleLabelKey } from '@my-onecomme-plugins/flow-comment-core/samples'
+import { PREVIEW_SAMPLES } from '@my-onecomme-plugins/flow-comment-core/samples'
 import type { FlowConfig } from '@my-onecomme-plugins/flow-comment-core/settings'
 import { useState } from 'react'
 import type { ReactElement } from 'react'
@@ -14,16 +16,42 @@ import type { Translate } from '../messages'
 const DARK = 'dark'
 const LIGHT = 'light'
 
+const ALL_SAMPLE_KEYS: ReadonlySet<SampleLabelKey> = new Set(
+  PREVIEW_SAMPLES.map((sample) => sample.labelKey),
+)
+
 export interface PreviewPanelProps {
   readonly t: Translate
   readonly formatLabel: FormatLabel
   readonly settings: FlowConfig
 }
 
+interface SampleToggleProps {
+  readonly enabled: ReadonlySet<SampleLabelKey>
+  readonly onToggle: (sample: PreviewSample, on: boolean) => void
+  readonly sample: PreviewSample
+  readonly t: Translate
+}
+
+const SampleToggle = ({ enabled, onToggle, sample, t }: SampleToggleProps): ReactElement => (
+  <div className="preview-sample">
+    <Checkbox.Root
+      checked={enabled.has(sample.labelKey)}
+      className="fc-checkbox fc-sample"
+      onCheckedChange={(checked) => {
+        onToggle(sample, checked === true)
+      }}
+    >
+      <Checkbox.Indicator className="fc-check-indicator" />
+    </Checkbox.Root>
+    <span>{t(sample.labelKey)}</span>
+  </div>
+)
+
 export const PreviewPanel = ({ formatLabel, settings, t }: PreviewPanelProps): ReactElement => {
-  // 既定は白系。配信の見た目ではなくプレビューの背景だけの話。
   const [light, setLight] = useState(true)
-  const { host, push, samples } = usePreview(settings, formatLabel)
+  const [enabled, setEnabled] = useState<ReadonlySet<SampleLabelKey>>(ALL_SAMPLE_KEYS)
+  const { host, push, samples } = usePreview({ enabled, formatLabel, settings })
   return (
     <section>
       <h2>{t('sectionPreview')}</h2>
@@ -47,16 +75,22 @@ export const PreviewPanel = ({ formatLabel, settings, t }: PreviewPanelProps): R
       </RadioGroup>
       <p className="preview-samples">
         {samples.map((sample) => (
-          <Button
-            className="fc-sample"
+          <SampleToggle
+            enabled={enabled}
             key={sample.labelKey}
-            onClick={() => {
-              push(sample)
+            onToggle={(next, on) => {
+              const keys = new Set(enabled)
+              if (on) {
+                keys.add(next.labelKey)
+                push(next)
+              } else {
+                keys.delete(next.labelKey)
+              }
+              setEnabled(keys)
             }}
-            type="button"
-          >
-            {t(sample.labelKey)}
-          </Button>
+            sample={sample}
+            t={t}
+          />
         ))}
       </p>
       <div className={light ? 'preview is-light' : 'preview'} ref={host} />

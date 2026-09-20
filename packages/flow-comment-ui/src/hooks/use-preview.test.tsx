@@ -1,4 +1,5 @@
 import type { FormatLabel } from '@my-onecomme-plugins/flow-comment-core/comment'
+import { PREVIEW_SAMPLES } from '@my-onecomme-plugins/flow-comment-core/samples'
 import { sanitizeConfig } from '@my-onecomme-plugins/flow-comment-core/settings'
 import type { FlowConfig } from '@my-onecomme-plugins/flow-comment-core/settings'
 import { click, mount, mountWithUpdate, required } from '@testing/react'
@@ -13,8 +14,14 @@ const formatLabel: FormatLabel = (label) => label.text ?? label.kind
 const settings = (overrides: Record<string, unknown> = {}): FlowConfig =>
   sanitizeConfig({ durationMs: 1000, lanes: 3, ...overrides })
 
+const ALL_KEYS = new Set(PREVIEW_SAMPLES.map((sample) => sample.labelKey))
+
 const Probe = ({ config }: { readonly config: FlowConfig }): ReactElement => {
-  const { host, push, samples } = usePreview(config, formatLabel)
+  const { host, push, samples } = usePreview({
+    enabled: ALL_KEYS,
+    formatLabel,
+    settings: config,
+  })
   const [first] = samples
   return (
     <div>

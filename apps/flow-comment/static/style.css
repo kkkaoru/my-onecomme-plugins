@@ -227,12 +227,20 @@ input[type='color'] {
   gap: var(--ui-space-2);
 }
 
+.preview-sample {
+  display: inline-flex;
+  gap: var(--ui-space-2);
+  align-items: center;
+}
+
 .preview {
   position: relative;
   height: 260px;
   overflow: hidden;
   border-radius: var(--ui-radius);
   background: #1e1e1e;
+  isolation: isolate;
+  transform: translateZ(0);
 }
 
 .preview.is-light {
@@ -413,17 +421,21 @@ textarea {
 }
 
 /* ---- プレビュー内のコメント描画 ---- */
-.fc-item {
+.fc-run {
   position: absolute;
   left: 0;
+  backface-visibility: hidden;
+  contain: layout style;
+  will-change: transform;
+}
+
+.fc-item {
   box-sizing: border-box;
-  /* 1件ずつレイアウトとペイントを独立させる。件数が増えても再計算が波及しない。 */
   contain: layout paint style;
   display: flex;
   gap: var(--ui-space-1);
   align-items: center;
   white-space: nowrap;
-  will-change: transform;
 }
 
 .fc-avatar {
@@ -473,4 +485,13 @@ textarea {
   height: 2em;
   width: auto;
   vertical-align: middle;
+}
+
+.fc-footer {
+  margin-top: var(--ui-space-8);
+  font-size: var(--ui-font-size-small);
+}
+
+.fc-footer a {
+  color: inherit;
 }
