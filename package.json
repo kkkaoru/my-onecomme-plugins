@@ -8,6 +8,7 @@
   "type": "module",
   "scripts": {
     "build": "bun run --filter '*' build",
+    "dev": "bun run --filter @my-onecomme-plugins/flow-comment dev",
     "tsc": "bun run --filter './apps/*' tsc && bun run --filter './packages/*' tsc && tsc",
     "tsc:apps": "bun run --filter './apps/*' tsc",
     "tsc:packages": "bun run --filter './packages/*' tsc",
