@@ -33,6 +33,7 @@ export const createSettingsApi = (baseUrl: string): SettingsApi => {
       const init: RequestInit = { cache: 'no-store', method }
       if (body !== undefined) {
         init.body = JSON.stringify(body)
+        init.headers = { 'content-type': 'application/json' }
       }
       const response = await fetch(`${baseUrl}${query}`, init)
       if (response.status !== STATUS_OK) {

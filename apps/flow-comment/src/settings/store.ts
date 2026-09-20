@@ -9,11 +9,27 @@ import type { OneCommeStore } from './types'
 const SETTINGS_KEY = 'settings'
 const PRESETS_KEY = 'presets'
 
+const isRecord = (value: unknown): value is Readonly<Record<string, unknown>> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+
+const parseJson = (raw: string): unknown => {
+  try {
+    return JSON.parse(raw)
+  } catch {
+    return null
+  }
+}
+
+const patchOf = (body: unknown): Readonly<Record<string, unknown>> => {
+  const raw = typeof body === 'string' ? parseJson(body) : body
+  return isRecord(raw) ? raw : {}
+}
+
 export const readSettings = (store: OneCommeStore): FlowConfig =>
   sanitizeConfig(store.get(SETTINGS_KEY))
 
 export const saveSettings = (store: OneCommeStore, body: unknown): FlowConfig => {
-  const settings = sanitizeConfig(body)
+  const settings = sanitizeConfig({ ...readSettings(store), ...patchOf(body) })
   store.set(SETTINGS_KEY, settings)
   return settings
 }

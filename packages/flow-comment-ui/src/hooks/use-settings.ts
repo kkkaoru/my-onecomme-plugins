@@ -87,7 +87,6 @@ export const useSettings = (
       setStatus(t('saveFailed'))
       return
     }
-    setValues(valuesOf(stored))
     setStatus(t('saveSuccess'))
   }, [api, t])
 

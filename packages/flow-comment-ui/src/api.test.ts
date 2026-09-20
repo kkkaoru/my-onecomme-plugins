@@ -69,6 +69,8 @@ test('saves the settings and reads them back', async () => {
   stubFetch(200, { response: { lanes: 3 } })
   const saved = await api().saveSettings(sanitizeConfig({ lanes: 3 }))
   expect(calls[0]?.init?.method).toBe('PUT')
+  expect(calls[0]?.init?.headers).toStrictEqual({ 'content-type': 'application/json' })
+  expect(JSON.parse(String(calls[0]?.init?.body)).lanes).toBe(3)
   expect(saved?.lanes).toBe(3)
 })
 

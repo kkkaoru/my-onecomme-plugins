@@ -44,6 +44,13 @@ test('persists sanitised settings over PUT', () => {
   expect([result.code, readSettings(store).lanes]).toStrictEqual([200, 3])
 })
 
+test('does not reset omitted fields over PUT', () => {
+  expect.hasAssertions()
+  const store = createStore({ lanes: 3, textColor: '#ff0000' })
+  handleRequest(store, request({ body: { lanes: 8 }, method: 'PUT' }))
+  expect([readSettings(store).lanes, readSettings(store).textColor]).toStrictEqual([8, '#ff0000'])
+})
+
 test('accepts POST as a save', () => {
   expect.hasAssertions()
   const store = createStore()

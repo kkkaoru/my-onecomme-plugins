@@ -43,6 +43,28 @@ test('persists sanitised settings', () => {
   expect([readSettings(store).lanes, readSettings(store).textColor]).toStrictEqual([3, '#ff0000'])
 })
 
+test('keeps stored fields that a partial save does not mention', () => {
+  expect.hasAssertions()
+  const store = createStore({ lanes: 3, textColor: '#ff0000' })
+  saveSettings(store, { lanes: 8 })
+  expect([readSettings(store).lanes, readSettings(store).textColor]).toStrictEqual([8, '#ff0000'])
+})
+
+test('keeps the store when the body is missing or not an object', () => {
+  expect.hasAssertions()
+  const store = createStore({ lanes: 3, textColor: '#ff0000' })
+  saveSettings(store, null)
+  saveSettings(store, 'not-json')
+  expect([readSettings(store).lanes, readSettings(store).textColor]).toStrictEqual([3, '#ff0000'])
+})
+
+test('reads a JSON string body the same as an object', () => {
+  expect.hasAssertions()
+  const store = createStore({ lanes: 3, textColor: '#ff0000' })
+  saveSettings(store, '{"lanes":9}')
+  expect([readSettings(store).lanes, readSettings(store).textColor]).toStrictEqual([9, '#ff0000'])
+})
+
 test('clamps before persisting an out of range body', () => {
   expect.hasAssertions()
   const store = createStore()
