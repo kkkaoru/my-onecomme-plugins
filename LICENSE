@@ -19,3 +19,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+The MIT License above does not apply to files under docs/patents/.
+Those files reproduce Japanese patent gazettes (claims, descriptions, and
+drawings). Copyright in that material remains with the respective patent
+holders. It is included for reference only and is not licensed under MIT.
