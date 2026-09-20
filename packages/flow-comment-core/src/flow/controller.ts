@@ -16,7 +16,7 @@ const pushComment = (state: FlowState, comment: FlowComment): void => {
   const lane = state.allocateLane.next()
   const geometry = syncGeometry(state)
   const mounted = mountItem(comment, state, lane)
-  applyGeometry(mounted.element, geometry, lane)
+  applyGeometry(mounted.host, geometry, lane)
   startItem(state, mounted)
 }
 

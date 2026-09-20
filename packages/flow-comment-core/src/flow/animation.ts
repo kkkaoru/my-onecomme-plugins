@@ -16,7 +16,10 @@ const keyframesOf = (from: number, to: number): Keyframe[] => [
 ]
 
 const animateItem = (state: FlowState, mounted: MountedItem): FlowItem => {
-  const { element } = mounted
+  const { element, host } = mounted
+  // Measure after attach: offsetWidth is 0 before that, so the run would end
+  // when the leading edge hits the far side instead of the trailing edge.
+  state.root.append(host)
   const { endX, startX } = horizontalRange(
     state.config.direction,
     element.offsetWidth,
@@ -25,11 +28,12 @@ const animateItem = (state: FlowState, mounted: MountedItem): FlowItem => {
   const ratio = devicePixelRatioOf()
   const from = quantizeToDevicePixel(startX, ratio)
   const to = quantizeToDevicePixel(endX, ratio)
-  state.root.append(mounted.host)
-  element.style.transform = `translate3d(${px(from)}, 0, 0)`
-  // Promoted to its own layer only while moving, so painting happens once.
-  element.style.willChange = 'transform'
-  const animation = element.animate(keyframesOf(from, to), {
+  // Animate the wrapper, not the painted item. Stroke and shadow on the same
+  // node as the transform force a main-thread paint every frame at 1080p.
+  host.style.transform = `translate3d(${px(from)}, 0, 0)`
+  host.style.willChange = 'transform'
+  const animation = host.animate(keyframesOf(from, to), {
+    composite: 'replace',
     duration: state.config.durationMs,
     easing: 'linear',
     fill: 'forwards',

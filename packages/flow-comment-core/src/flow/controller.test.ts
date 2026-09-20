@@ -77,7 +77,9 @@ beforeEach(() => {
   Element.prototype.animate = recordAnimate
   Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
     configurable: true,
-    get: (): number => ITEM_WIDTH,
+    get(): number {
+      return this.isConnected ? ITEM_WIDTH : 0
+    },
   })
 })
 
@@ -134,6 +136,7 @@ test('uses the configured duration and linear easing', () => {
   const flow = createTestFlow(root, config())
   flow.push({ html: 'a', id: '1', name: 'n' })
   expect(recorded[0]?.options).toStrictEqual({
+    composite: 'replace',
     duration: DURATION,
     easing: 'linear',
     fill: 'forwards',
@@ -157,7 +160,7 @@ test('places the item in the lane it was assigned', () => {
   )
   flow.push({ html: 'a', id: '1', name: 'n' })
   flow.push({ html: 'b', id: '2', name: 'n' })
-  const tops = [...root.querySelectorAll<HTMLElement>('.fc-item')].map(
+  const tops = [...root.querySelectorAll<HTMLElement>('.fc-run')].map(
     (element) => element.style.top,
   )
   expect(tops).toStrictEqual(['0px', '100px'])
@@ -218,7 +221,7 @@ test('promotes the item to its own layer only while moving', () => {
   const root = createRootElement()
   const flow = createTestFlow(root, config())
   flow.push({ html: 'a', id: '1', name: 'n' })
-  expect(root.querySelector<HTMLElement>('.fc-item')?.style.willChange).toStrictEqual('transform')
+  expect(root.querySelector<HTMLElement>('.fc-run')?.style.willChange).toStrictEqual('transform')
 })
 
 test('does not start an animation after destroy', () => {

@@ -11,6 +11,7 @@ import type { FlowState, MountedItem } from './types'
 
 export const mountItem = (comment: FlowComment, state: FlowState, lane: number): MountedItem => {
   const host = document.createElement('div')
+  host.className = 'fc-run'
   const root = createRoot(host)
   flushSync(() => {
     root.render(

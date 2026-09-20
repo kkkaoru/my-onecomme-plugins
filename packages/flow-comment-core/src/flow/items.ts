@@ -11,7 +11,7 @@ export const removeItem = (state: FlowState, item: FlowItem): void => {
   }
   state.items = state.items.filter((entry) => entry !== item)
   item.animation.cancel()
-  item.element.style.willChange = 'auto'
+  item.host.style.willChange = 'auto'
   unmountItem(item)
 }
 

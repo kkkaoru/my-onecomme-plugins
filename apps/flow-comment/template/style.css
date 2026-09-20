@@ -18,18 +18,23 @@ body {
   height: 100%;
   overflow: hidden;
   contain: layout paint;
+  isolation: isolate;
+  transform: translateZ(0);
 }
 
-/* 各アイテムは生成から消滅までアニメーションし続けるため、will-change は
-   寿命全体に対して妥当。終了時に items.ts が auto に戻してレイヤーを解放する。
-   1件ずつレイアウト・ペイントを独立させ、件数が増えても再計算が波及しない。 */
-.fc-item {
+/* 動かすのはラッパーだけ。縁取りや影は内側に置き、毎フレームの再描画を避ける。 */
+.fc-run {
   position: absolute;
   left: 0;
+  backface-visibility: hidden;
+  contain: layout style;
+  will-change: transform;
+}
+
+.fc-item {
   box-sizing: border-box;
   white-space: nowrap;
   contain: layout paint style;
-  will-change: transform;
 }
 
 .fc-name {
