@@ -23,13 +23,8 @@ src/ + template/ + static/  --ビルド-->  dist/flow-comment-template/  -> temp
 
 ```sh
 bun install
-bun run build
-```
-
-```sh
-D="$HOME/Library/Application Support/onecomme"
-cp -R apps/flow-comment/dist/flow-comment-template "$D/templates/custom/flow-comment"
-cp -R apps/flow-comment/dist/flow-comment-plugin   "$D/plugins/flow-comment"
+bun run build   # dist 作成 + わんコメへコピー
+bun run dev     # ソース変更のたびにビルドしてコピー
 ```
 
 1. わんコメの設定 → テンプレートで `flow-comment` を選ぶ
@@ -46,15 +41,17 @@ cp -R apps/flow-comment/dist/flow-comment-plugin   "$D/plugins/flow-comment"
 http://localhost:11180/plugins/com.example.my-onecomme-plugins.flow-comment/
 ```
 
+テストが通ってもわんコメは古いまま。`bun run build` か `bun run dev` がコピーする。設定タブはハード再読込。`plugin.js` は無効→有効か再起動。詳細はリポジトリ直下の `AGENTS.md`。
+
 ## 反映のタイミング
 
 | 変更したもの               | 反映                                          |
 | -------------------------- | --------------------------------------------- |
-| 設定画面 (static/) の UI   | 再読込ですぐ                                  |
-| テンプレート (template/)   | 再読込ですぐ                                  |
+| 設定画面 (static/ / UI)    | `bun run dev` のあと、設定タブを再読込        |
+| テンプレート (template/)   | `bun run dev` のあと、配信画面を再読込        |
 | プラグイン本体 (plugin.js) | **プラグインの無効→有効、または再起動が必要** |
 
-`plugin.js` はわんコメがメモリに保持するため、本体の変更は再読込まで効かない。
+`bun run build` / `bun run dev` は `~/Library/Application Support/OneComme/` へコピーする。設定タブは再読込で新しい `script.js` を取る（クエリ付き URL は 11180 が 404 を返す）。`plugin.js` はわんコメがメモリに保持するため、本体の変更は無効→有効まで効かない。
 
 ## 設定（全28項目）
 

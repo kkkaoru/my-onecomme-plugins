@@ -2,6 +2,8 @@
 
 わんコメ (OneComme) プラグインの monorepo。bun workspaces で管理する。
 
+エージェントは `AGENTS.md` を先に読む。テストではわんコメは更新されない。
+
 ## 必要環境
 
 - bun 1.3+
@@ -45,18 +47,19 @@ recommended-latest に合わせている)。一時的に外したいときはコ
 
 ## コマンド
 
-| コマンド                                                   | 内容                                                             |
-| ---------------------------------------------------------- | ---------------------------------------------------------------- |
-| `bun install`                                              | 依存関係のインストール                                           |
-| `bun run build`                                            | 全パッケージをビルド                                             |
-| `bun run tsc`                                              | 型チェック（アプリ・パッケージ・リポジトリ直下をまとめて）       |
-| `bun run tsc:apps` / `bun run tsc:packages`                | アプリ / パッケージだけを型チェック                              |
-| `bun run --filter '@my-onecomme-plugins/flow-comment' tsc` | 1 つのワークスペースだけを型チェック                             |
-| `bun run lint`                                             | oxlint + markuplint                                              |
-| `bun run lint:fix`                                         | oxlint --fix (HTML の整形は oxfmt の役割)                        |
-| `bun run format` / `bun run format:check`                  | oxfmt (JS / TS / HTML)                                           |
-| `bun run test`                                             | vitest                                                           |
-| `bun run coverage`                                         | カバレッジ (statements/lines/functions/branches すべて 95% 以上) |
+| コマンド                                                   | 内容                                                              |
+| ---------------------------------------------------------- | ----------------------------------------------------------------- |
+| `bun install`                                              | 依存関係のインストール                                            |
+| `bun run build`                                            | 全パッケージをビルド。flow-comment はわんコメへコピーする         |
+| `bun run dev`                                              | flow-comment を監視してビルド・わんコメ配置（開発中はこれを常時） |
+| `bun run tsc`                                              | 型チェック（アプリ・パッケージ・リポジトリ直下をまとめて）        |
+| `bun run tsc:apps` / `bun run tsc:packages`                | アプリ / パッケージだけを型チェック                               |
+| `bun run --filter '@my-onecomme-plugins/flow-comment' tsc` | 1 つのワークスペースだけを型チェック                              |
+| `bun run lint`                                             | oxlint + markuplint                                               |
+| `bun run lint:fix`                                         | oxlint --fix (HTML の整形は oxfmt の役割)                         |
+| `bun run format` / `bun run format:check`                  | oxfmt (JS / TS / HTML)                                            |
+| `bun run test`                                             | vitest                                                            |
+| `bun run coverage`                                         | カバレッジ (statements/lines/functions/branches すべて 95% 以上)  |
 
 HTML だけ検査したい場合は `bunx markuplint "**/*.html"`。
 
