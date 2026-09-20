@@ -62,6 +62,9 @@ export const SettingsScreen = ({
         values={values}
       />
       <StatusLine message={status} />
+      <footer className="fc-footer">
+        <a href="./licenses.html">{t('linkLicenses')}</a>
+      </footer>
     </main>
   )
 }

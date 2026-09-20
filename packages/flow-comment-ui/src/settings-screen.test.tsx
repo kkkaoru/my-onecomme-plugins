@@ -27,12 +27,19 @@ const stubApi = (payload: {
   vi.stubGlobal('fetch', (url: string, init?: RequestInit) => {
     calls.push({ init, url })
     const method = init?.method ?? 'GET'
-    const body =
-      method === 'GET' && url.includes('action=presets')
-        ? (payload.presets ?? {})
-        : (payload.settings ?? {})
+    const raw = init?.body
+    const written = typeof raw === 'string' ? JSON.parse(raw) : payload.settings
+    const body = (): unknown => {
+      if (method === 'GET' && url.includes('action=presets')) {
+        return payload.presets ?? {}
+      }
+      if (method === 'PUT' || method === 'POST') {
+        return written
+      }
+      return payload.settings ?? {}
+    }
     return Promise.resolve(
-      Response.json({ code: 200, response: body }, { status: payload.status ?? 200 }),
+      Response.json({ code: 200, response: body() }, { status: payload.status ?? 200 }),
     )
   })
 }
@@ -103,6 +110,14 @@ test('builds the whole screen from the React tree', () => {
   expect(container.querySelector('#io-json')).not.toBeNull()
 })
 
+test('links to the license page in the footer', () => {
+  expect.hasAssertions()
+  const container = screen({ lanes: 3 })
+  const link = required(container.querySelector('footer a'), 'licenses')
+  expect(link.getAttribute('href')).toBe('./licenses.html')
+  expect(link.textContent).toBe('linkLicenses')
+})
+
 test('tells the user when the plugin could not be reached', () => {
   expect.hasAssertions()
   const container = screen(null)
@@ -118,10 +133,11 @@ test('shows the settings it was handed', () => {
 test('saves on submit and says so', async () => {
   expect.hasAssertions()
   stubApi({ settings: { lanes: 3 } })
-  const container = screen({ lanes: 3 })
+  const container = screen({ lanes: 3, textColor: '#ff0000' })
   await submitForm(container)
   expect(writes()[0]?.init?.method).toBe('PUT')
   expect(status(container)).toBe('saveSuccess')
+  expect(container.querySelector('input[type="color"]')?.getAttribute('value')).toBe('#ff0000')
 })
 
 test('reports a save that fails', async () => {
@@ -153,7 +169,7 @@ test('saves by itself once the editing stops', () => {
   expect.hasAssertions()
   stubApi({ settings: { lanes: 3 } })
   const container = screen({ lanes: 3 })
-  const box = required(container.querySelector('.fc-checkbox'), 'box')
+  const box = required(container.querySelector('.fc-form .fc-checkbox'), 'box')
   click(box)
   advance(600)
   expect(writes()[0]?.init?.method).toBe('PUT')
