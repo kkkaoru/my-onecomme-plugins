@@ -26,7 +26,7 @@ src/ + template/ + static/  --ビルド-->  dist/flow-comment-template/  -> temp
 - macOS: `~/Library/Application Support/OneComme/`
 - Windows: `%APPDATA%/OneComme/`
 
-zip の中身は動作に必要なファイルだけ（プラグインの `plugin.js` / 設定 UI、テンプレートの `template.json` / 画面）。わんコメを再起動し、テンプレートとプラグインで「流れるコメント」を有効化する。
+zip の中身は `plugins/flow-comment` と `templates/custom/flow-comment`（フォント・ヘルプ・ライセンスを含む）。わんコメを再起動し、テンプレートとプラグインで「流れるコメント」を有効化する。
 
 開発する場合:
 
