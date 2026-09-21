@@ -2,7 +2,7 @@
 
 [商品情報を編集](https://manage.booth.pm/items/8877591/edit) へ貼る文面です。
 
-作品ファイルは GitHub Releases の `flow-comment.zip`（v1.0.6 以降）。zip 内の README と同じ手順です。
+作品ファイルは GitHub Releases の `plugin_flow-comment.zip` と `template_flow-comment.zip`（v1.0.7 以降）。
 
 リポジトリ: https://github.com/kkkaoru/my-onecomme-plugins
 最新版: https://github.com/kkkaoru/my-onecomme-plugins/releases
@@ -19,12 +19,14 @@
 
 1枚目がサムネイル。
 
-| 順  | ファイル           | 用途                           |
-| --- | ------------------ | ------------------------------ |
-| 1   | `01-thumb.png`     | 通常コメントとスパチャ         |
-| 2   | `02-superchat.png` | スパチャの色（YouTube の段階） |
-| 3   | `03-gift.png`      | ギフト・メンバー加入           |
-| 4   | `04-normal.png`    | 通常コメントのみ               |
+| 順  | ファイル               | 用途                           |
+| --- | ---------------------- | ------------------------------ |
+| 1   | `01-thumb.png`         | 通常コメントとスパチャ         |
+| 2   | `02-superchat.png`     | スパチャの色（YouTube の段階） |
+| 3   | `03-gift.png`          | ギフト・メンバー加入           |
+| 4   | `04-normal.png`        | 通常コメントのみ               |
+| 5   | `05-settings.png`      | 設定画面（プレビュー）         |
+| 6   | `06-settings-full.png` | 設定画面（全体）               |
 
 ## カテゴリ
 
@@ -52,11 +54,12 @@
 
 ## 使い方
 
-1. zip を展開する
-2. わんコメ右上メニュー → プラグイン →「プラグインフォルダ」を開き、`plugin/flow-comment` を置く（中に plugin.js があること）
-3. プラグイン一覧で再読み込みし、「流れるコメント」を有効化する
-4. `template/flow-comment` をテンプレート一覧へドラッグ＆ドロップする（または `templates/custom/` にフォルダごと置く）
-5. わんコメでテンプレート「流れるコメント」を選び、OBS へ入れる
+プラグインとテンプレートで zip が別です。
+
+1. `plugin_flow-comment.zip` を展開し、中の `flow-comment` フォルダをわんコメの「プラグインフォルダ」へコピーする（plugin.js がその直下）
+2. プラグイン一覧で再読み込みし、「流れるコメント」を有効化する
+3. `template_flow-comment.zip` は展開せず、テンプレート一覧へドラッグ＆ドロップする
+4. わんコメでテンプレート「流れるコメント」を選び、OBS へ入れる
 
 OBS のブラウザソースは配信と同じ解像度（例: 1920×1080）、FPS は 60 にしてください。
 
@@ -115,7 +118,7 @@ https://onecomme.com
 
 ## 作品ファイル
 
-`flow-comment.zip`
+`plugin_flow-comment.zip` と `template_flow-comment.zip`
 
 ## 日本国外への販売
 

@@ -21,7 +21,7 @@ src/ + template/ + static/  --ビルド-->  dist/flow-comment-template/  -> temp
 
 ## インストール
 
-[Releases](https://github.com/kkkaoru/my-onecomme-plugins/releases) の `flow-comment.zip` を使う（Source code は使わない）。手順は zip 内の `README.md` と同じ。
+[Releases](https://github.com/kkkaoru/my-onecomme-plugins/releases) の `plugin_flow-comment.zip` と `template_flow-comment.zip` を使う（Source code は使わない）。手順はプラグイン zip 内の `README.md` と同じ。
 
 開発する場合:
 
