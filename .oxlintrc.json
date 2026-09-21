@@ -34,7 +34,8 @@
     "**/node_modules/**",
     "**/coverage/**",
     "**/.vitest/**",
-    "**/storybook-static/**"
+    "**/storybook-static/**",
+    "apps/flow-comment/booth/**"
   ],
   "rules": {
     "no-console": "off",

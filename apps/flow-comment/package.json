@@ -1,6 +1,6 @@
 {
   "name": "@my-onecomme-plugins/flow-comment",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "private": true,
   "scripts": {
     "build": "bun build src/plugin.ts --outdir dist/flow-comment-plugin --target node --format cjs --footer 'module.exports = module.exports.default' && vite build && vite build --mode template && cp static/index.html static/style.css static/favicon.svg static/help.html static/help-setup.svg static/help-preview.svg static/help-obs.svg dist/flow-comment-plugin/ && cp template/template.json template/index.html template/style.css template/thumb.png dist/flow-comment-template/ && node scripts/copy-fonts.mjs && bun scripts/write-licenses.mjs && bun scripts/copy-to-onecomme.mjs",

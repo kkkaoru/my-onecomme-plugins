@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../dist/flow-comment-template/fonts.css" />
+    <link rel="stylesheet" href="../template/style.css" />
+    <style>
+      html,
+      body,
+      .flow {
+        width: 1280px;
+        height: 720px;
+        background: #ffffff;
+      }
+      .fc-run {
+        transform: none;
+      }
+      .fc-item {
+        font-family: 'Noto Sans JP Variable', sans-serif;
+        font-size: 62px;
+        font-weight: 700;
+        color: #ffffff;
+        padding: 5px 14px;
+        -webkit-text-stroke: 2px #000000;
+        paint-order: stroke;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="flow" class="flow"></div>
+    <script>
+      const svgUrl = (markup) => `data:image/svg+xml;utf8,${encodeURIComponent(markup)}`
+      const avatar = svgUrl(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" rx="32" fill="#555"/></svg>',
+      )
+      const giftIcon = svgUrl(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" rx="10" fill="#9c27b0"/><rect x="10" y="28" width="44" height="26" fill="#ce93d8"/><rect x="28" y="14" width="8" height="40" fill="#fff"/><rect x="10" y="32" width="44" height="8" fill="#fff"/><path d="M32 14C22 4 14 16 32 28C50 16 42 4 32 14Z" fill="#fff"/></svg>',
+      )
+      const memberBadge = svgUrl(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><circle cx="32" cy="32" r="32" fill="#2ba640"/><polygon fill="#fff" points="32,10 38,24 54,26 42,36 46,52 32,44 18,52 22,36 10,26 26,24"/></svg>',
+      )
+      const run = (top, left, inner, style = '') => {
+        const box = document.createElement('div')
+        box.className = 'fc-run'
+        box.style.top = `${top}px`
+        box.style.left = `${left}px`
+        const item = document.createElement('div')
+        item.className = 'fc-item'
+        if (style !== '') {
+          item.setAttribute('style', `${item.getAttribute('style') ?? ''};${style}`)
+        }
+        item.innerHTML = inner
+        box.append(item)
+        return box
+      }
+      const text = (value) => `<span class="fc-text">${value}</span>`
+      const card = (amount, name, body) =>
+        `<img class="fc-avatar" alt="" src="${avatar}" /><span class="fc-paid" style="color:#fff">${amount}</span><span class="fc-name" style="color:#fff">${name}</span>${text(body)}`
+      const giftCard = (name, body) =>
+        `<img class="fc-avatar" alt="" src="${avatar}" /><span class="fc-paid" style="color:#fff">ギフト</span><span class="fc-name" style="color:#fff">${name}</span><span class="fc-text"><img alt="ギフト" class="gift-image" src="${giftIcon}" /> ${body}</span>`
+      const memberCard = (name, body) =>
+        `<img class="fc-avatar" alt="" src="${avatar}" /><span class="fc-badge" title="メンバー"><img alt="メンバー" src="${memberBadge}" /></span><span class="fc-paid" style="color:#fff">メンバー加入</span><span class="fc-name" style="color:#fff">${name}</span>${text(body)}`
+      const scenes = {
+        mixed: [
+          run(16, 640, text('こんにちゎ〜〜')),
+          run(
+            160,
+            -80,
+            card('¥1,000', 'みなと', 'いつも見てます'),
+            'background:rgb(255, 202, 40);color:#fff',
+          ),
+          run(
+            304,
+            360,
+            `<span class="fc-badge" title="メンバー"><img alt="メンバー" src="${memberBadge}" /></span>${text('いつもありがとう')}`,
+          ),
+          run(
+            448,
+            180,
+            card('¥5,000', 'そらまめ', '今月も応援してます'),
+            'background:rgb(194, 24, 91);color:#fff',
+          ),
+          run(592, 760, text('今日も配信ありがとう')),
+        ],
+        superchat: [
+          run(16, 520, card('¥100', 'かえで', 'きたー'), 'background:rgb(30, 136, 229);color:#fff'),
+          run(160, -40, card('¥200', 'ゆず', 'おはよ'), 'background:rgb(0, 184, 212);color:#fff'),
+          run(
+            304,
+            280,
+            card('¥1,000', 'みなと', '初見ですよろしくお願いします'),
+            'background:rgb(255, 202, 40);color:#fff',
+          ),
+          run(
+            448,
+            640,
+            card('¥5,000', 'そらまめ', '今月も応援してます'),
+            'background:rgb(194, 24, 91);color:#fff',
+          ),
+          run(
+            592,
+            40,
+            card('¥10,000', 'れん', '誕生日おめでとう'),
+            'background:rgb(208, 0, 0);color:#fff',
+          ),
+        ],
+        gift: [
+          run(16, 700, text('きたー')),
+          run(160, 80, giftCard('ゆず', 'プレゼント'), 'background:rgb(156, 39, 176);color:#fff'),
+          run(
+            304,
+            -40,
+            memberCard('みなと', 'はじめまして'),
+            'background:rgb(16, 117, 22);color:#fff',
+          ),
+          run(448, 480, text('草')),
+          run(592, 40, text('888888')),
+        ],
+        normal: [
+          run(16, 720, text('初見です！')),
+          run(160, -20, text('待機所から来ました')),
+          run(304, 480, text('88888888')),
+          run(448, 160, text('今日も配信ありがとう')),
+          run(592, 640, text('ナイス配信')),
+        ],
+      }
+      const key = new URLSearchParams(location.search).get('scene') ?? 'mixed'
+      const flow = document.getElementById('flow')
+      for (const node of scenes[key] ?? scenes.mixed) {
+        flow.append(node)
+      }
+    </script>
+  </body>
+</html>

@@ -7,6 +7,7 @@
     "**/dist/**",
     "coverage/**",
     "storybook-static/**",
-    "docs/patents/**"
+    "docs/patents/**",
+    "apps/flow-comment/booth/**"
   ]
 }
