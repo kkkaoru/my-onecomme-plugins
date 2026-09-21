@@ -4,7 +4,7 @@
 
 エージェントは `AGENTS.md` を先に読む。テストではわんコメは更新されない。
 
-配布 zip は [Releases](https://github.com/kkkaoru/my-onecomme-plugins/releases) から取る。`v*` タグを push するとプラグインとテンプレートの zip が付く。
+配布 zip は [Releases](https://github.com/kkkaoru/my-onecomme-plugins/releases) の `flow-comment.zip`。中に README・プラグイン・テンプレートが入る。
 
 ## 必要環境
 
