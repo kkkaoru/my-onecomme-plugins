@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="160" viewBox="0 0 480 160">
+  <rect width="480" height="160" fill="#1e1e1e"/>
+  <g
+    fill="#ffffff"
+    font-family="Hiragino Sans, sans-serif"
+    font-size="22"
+    font-weight="700"
+    paint-order="stroke"
+    stroke="#000000"
+    stroke-width="4"
+  >
+    <text x="200" y="58">こんにちは</text>
+    <text x="40" y="96">888</text>
+    <text x="110" y="134">配信ありがとう</text>
+  </g>
+</svg>

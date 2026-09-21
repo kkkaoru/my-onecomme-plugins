@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="160" viewBox="0 0 480 160">
+  <rect width="480" height="160" fill="#1b1b1f"/>
+  <rect x="24" y="24" width="432" height="112" rx="8" fill="#111118" stroke="#5a5a63"/>
+  <text x="40" y="56" fill="#b6b6bf" font-family="Hiragino Sans, sans-serif" font-size="13">
+    OBS ブラウザソース
+  </text>
+  <text x="40" y="88" fill="#f2f2f4" font-family="Hiragino Sans, sans-serif" font-size="16">
+    ブラウザ ・ FPS 60 ・ 1920×1080
+  </text>
+  <text x="40" y="116" fill="#7fb2ff" font-family="Hiragino Sans, sans-serif" font-size="13">
+    変更後は「ブラウザを更新」
+  </text>
+</svg>

@@ -22,6 +22,7 @@
   --ui-space-12: 48px;
   --ui-space-32: 128px;
   --ui-space-40: 160px;
+  --ui-preview-height: 480px;
 
   /* 形と色 */
   --ui-radius: var(--ui-space-2);
@@ -61,6 +62,17 @@ h2 {
 
 p {
   margin: 0 0 var(--ui-space-2);
+}
+
+.fc-help-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ui-control-height);
+  padding: 0 var(--ui-space-3);
+  border: var(--ui-border);
+  border-radius: var(--ui-radius);
+  font-weight: 700;
+  text-decoration: none;
 }
 
 /* ---- 操作要素 ---- */
@@ -235,12 +247,22 @@ input[type='color'] {
 
 .preview {
   position: relative;
-  height: 260px;
+  height: var(--ui-preview-height);
   overflow: hidden;
   border-radius: var(--ui-radius);
   background: #1e1e1e;
-  isolation: isolate;
-  transform: translateZ(0);
+}
+
+.fc-metrics {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 9999;
+  padding: 4px 8px;
+  font: 14px/1 monospace;
+  color: #fff;
+  background: rgb(0 0 0 / 70%);
+  pointer-events: none;
 }
 
 .preview.is-light {
@@ -424,36 +446,48 @@ textarea {
 .fc-run {
   position: absolute;
   left: 0;
-  backface-visibility: hidden;
   contain: layout style;
-  will-change: transform;
 }
 
 .fc-item {
-  box-sizing: border-box;
-  contain: layout paint style;
   display: flex;
   gap: var(--ui-space-1);
   align-items: center;
+  box-sizing: border-box;
+  line-height: 1;
   white-space: nowrap;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
 }
 
-.fc-avatar {
-  width: 1.2em;
-  height: 1.2em;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
+.fc-name,
+.fc-paid,
+.fc-text,
 .fc-badge {
   display: inline-flex;
   align-items: center;
+  line-height: 1;
 }
 
-.fc-badge img {
-  height: 1em;
+.fc-run,
+.fc-run * {
+  font-family: inherit;
+}
+
+.fc-item img {
+  display: block;
+  flex-shrink: 0;
   width: auto;
-  vertical-align: middle;
+  height: 1em;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.fc-avatar {
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .fc-name {
@@ -480,11 +514,8 @@ textarea {
   resize: vertical;
 }
 
-/* OneComme の標準テーマと同じく、ギフト画像は本文中で少し大きめに出す。 */
 .fc-text .gift-image {
-  height: 2em;
-  width: auto;
-  vertical-align: middle;
+  height: 1em;
 }
 
 .fc-footer {

@@ -33,6 +33,7 @@ export const UI_MESSAGE_KEYS = [
   'importFailed',
   'importSuccess',
   'labelJson',
+  'linkHelp',
   'linkLicenses',
   'labelPresetName',
   'labelPresetSaved',

@@ -29,7 +29,7 @@ export const SettingsScreen = ({
   initialSettings,
   t,
 }: SettingsScreenProps): ReactElement => {
-  const { apply, current, reset, save, setStatus, settings, status, update, values } = useSettings(
+  const { apply, current, reset, setStatus, settings, status, update, values } = useSettings(
     api,
     initialSettings,
     t,
@@ -38,8 +38,11 @@ export const SettingsScreen = ({
 
   return (
     <main>
-      <h1>Flow Comment</h1>
-      <p className="lead">{t('appDescription')}</p>
+      <p>
+        <a className="fc-help-link" href="./help.html">
+          {t('linkHelp')}
+        </a>
+      </p>
       <PreviewPanel formatLabel={formatLabel} settings={settings} t={t} />
       <PresetPanel
         api={api}
@@ -53,9 +56,6 @@ export const SettingsScreen = ({
       <SettingsForm
         onReset={() => {
           void reset()
-        }}
-        onSubmit={() => {
-          void save()
         }}
         onUpdate={update}
         t={t}

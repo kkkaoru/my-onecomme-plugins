@@ -28,7 +28,7 @@ const plugin = {
     state.store = context.store
     console.info(`[flow-comment] enabled: ${FLOW_COMMENT_UID}`)
   },
-  name: 'Flow Comment',
+  name: '流れるコメント',
   permissions: [],
   request(req: PluginRequest): PluginResponse {
     if (state.store === null) {

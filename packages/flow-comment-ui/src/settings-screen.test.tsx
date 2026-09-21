@@ -3,7 +3,6 @@ import { sanitizeConfig } from '@my-onecomme-plugins/flow-comment-core/settings'
 // @vitest-environment happy-dom
 // Runs with bun.
 import { advance, click, clickAsync, exercise, mount, required, translate } from '@testing/react'
-import { act } from 'react'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import { createSettingsApi } from './api'
@@ -70,16 +69,6 @@ const status = (container: HTMLElement): string =>
 
 const writes = (): readonly Call[] => calls.filter((call) => (call.init?.method ?? 'GET') !== 'GET')
 
-// happy-dom は送信ボタンの暗黙の submit を持たないので、submit を直接送る。
-// 実ブラウザでの押下は Storybook の play 関数が見ている。
-const submitForm = async (container: HTMLElement): Promise<void> => {
-  const form = required(container.querySelector('form'), 'form')
-  await act(async () => {
-    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-    await Promise.resolve()
-  })
-}
-
 const readout = (container: HTMLElement, label: string): string | undefined => {
   const row = [...container.querySelectorAll('.field')].find(
     (element) => element.textContent?.includes(label) === true,
@@ -104,7 +93,7 @@ afterEach(() => {
 test('builds the whole screen from the React tree', () => {
   expect.hasAssertions()
   const container = screen({ lanes: 3 })
-  expect(container.querySelector('h1')?.textContent).toBe('Flow Comment')
+  expect(container.querySelector('a[href="./help.html"]')?.textContent).toBe('linkHelp')
   expect(container.querySelectorAll('.field').length).toBe(28)
   expect(container.querySelector('.preview')).not.toBeNull()
   expect(container.querySelector('#io-json')).not.toBeNull()
@@ -128,24 +117,6 @@ test('shows the settings it was handed', () => {
   expect.hasAssertions()
   const container = screen({ fontSizePx: 48 })
   expect(readout(container, 'fieldFontSizePx')).toBe('48')
-})
-
-test('saves on submit and says so', async () => {
-  expect.hasAssertions()
-  stubApi({ settings: { lanes: 3 } })
-  const container = screen({ lanes: 3, textColor: '#ff0000' })
-  await submitForm(container)
-  expect(writes()[0]?.init?.method).toBe('PUT')
-  expect(status(container)).toBe('saveSuccess')
-  expect(container.querySelector('input[type="color"]')?.getAttribute('value')).toBe('#ff0000')
-})
-
-test('reports a save that fails', async () => {
-  expect.hasAssertions()
-  stubApi({ settings: { lanes: 3 }, status: 500 })
-  const container = screen({ lanes: 3 })
-  await submitForm(container)
-  expect(status(container)).toBe('saveFailed')
 })
 
 test('returns to the defaults on reset', async () => {
@@ -202,5 +173,5 @@ test('keeps the screen through repeated renders', () => {
       initialSettings={sanitizeConfig({ lanes: 4 })}
     />,
   )
-  expect(container.querySelector('h1')?.textContent).toBe('Flow Comment')
+  expect(container.querySelector('a[href="./help.html"]')?.textContent).toBe('linkHelp')
 })

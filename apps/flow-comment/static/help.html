@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>流れるコメント 使い方</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./fonts.css" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main>
+      <p><a href="./">設定画面へ戻る</a></p>
+      <h1>流れるコメント 使い方</h1>
+      <p>
+        わんコメのコメントを、画面の右から左へ流して表示します。設定は入力を止めると自動で保存されます。
+      </p>
+      <h2>1. 準備</h2>
+      <figure>
+        <img
+          alt="プラグインを有効にし、テンプレートで流れるコメントを選ぶ"
+          height="160"
+          src="./help-setup.svg"
+          width="480"
+        />
+      </figure>
+      <ol>
+        <li>わんコメの設定 → プラグインで「流れるコメント」を有効にする</li>
+        <li>わんコメの設定 → テンプレートで「流れるコメント」を選ぶ</li>
+        <li>設定画面はプラグインのリンクから開く</li>
+      </ol>
+      <h2>2. 見た目を変える</h2>
+      <figure>
+        <img
+          alt="設定画面のプレビューでコメントが右から左へ流れる"
+          height="160"
+          src="./help-preview.svg"
+          width="480"
+        />
+      </figure>
+      <ul>
+        <li>プレビューで文字サイズ・色・レーンを確認する</li>
+        <li>値を変えると約 0.5 秒後に自動保存され、配信側にも反映される</li>
+        <li>「初期値に戻す」で出荷時の設定に戻る</li>
+      </ul>
+      <h2>3. OBS に出す</h2>
+      <figure>
+        <img
+          alt="OBS のブラウザソースにわんコメの配信画面 URL を貼る"
+          height="160"
+          src="./help-obs.svg"
+          width="480"
+        />
+      </figure>
+      <ol>
+        <li>OBS に「ブラウザ」ソースを追加し、わんコメの配信画面 URL を指定する</li>
+        <li>プロパティの「FPS」を 60 にする（既定は 30）</li>
+        <li>幅と高さは配信と同じにする（例: 1920×1080）</li>
+        <li>設定を変えたあとは、ソースを右クリックして「ブラウザを更新」する</li>
+      </ol>
+      <p><a href="./">設定画面へ戻る</a> · <a href="./licenses.html">利用ライブラリ</a></p>
+    </main>
+  </body>
+</html>
