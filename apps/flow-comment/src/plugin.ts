@@ -38,7 +38,7 @@ const plugin = {
   },
   uid: FLOW_COMMENT_UID,
   url: `http://localhost:11180/plugins/${FLOW_COMMENT_UID}/`,
-  version: '0.0.0',
+  version: '1.0.0',
 }
 
 export default plugin
