@@ -4,6 +4,7 @@
 import type { ReactElement } from 'react'
 
 import type { FlowConfig } from '../../settings/config'
+import { cssFontFamily } from '../../settings/fonts'
 import type { FlowComment } from '../model/comment'
 import type { FormatLabel } from '../rules/label'
 import { selectLabel } from '../rules/label'
@@ -51,7 +52,11 @@ export const CommentItem = ({
         : null}
       <PaidLabel colors={colors} label={labelTextOf(comment, formatLabel)} />
       <AuthorName color={nameColor} name={comment.name} visible={visibility.name} />
-      <CommentBody color={config.textColor} html={comment.html} />
+      <CommentBody
+        color={config.textColor}
+        fontFamily={cssFontFamily(config.fontFamily)}
+        html={comment.html}
+      />
     </div>
   )
 }

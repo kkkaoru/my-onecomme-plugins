@@ -41,6 +41,11 @@ export const BASE_FONT_FAMILIES: readonly string[] = [
 // document.fonts / queryLocalFonts が返す family 名の引用符を外す。
 export const familyOf = (raw: string): string => raw.replace(FONT_QUOTES, '')
 
+export const cssFontFamily = (raw: string): string => {
+  const family = familyOf(raw).trim()
+  return family === '' ? 'sans-serif' : family
+}
+
 // 入力に含まれる候補だけを、日本語の並び順で返す。
 export const matchingFonts = (names: Iterable<string>, filter: string): readonly string[] => {
   const needle = filter.trim().toLowerCase()

@@ -7,7 +7,7 @@ import type { FormatLabel } from '@my-onecomme-plugins/flow-comment-core/comment
 import type { PreviewSample, SampleLabelKey } from '@my-onecomme-plugins/flow-comment-core/samples'
 import { PREVIEW_SAMPLES } from '@my-onecomme-plugins/flow-comment-core/samples'
 import type { FlowConfig } from '@my-onecomme-plugins/flow-comment-core/settings'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { ReactElement } from 'react'
 
 import { usePreview } from '../hooks/use-preview'
@@ -26,12 +26,52 @@ export interface PreviewPanelProps {
   readonly settings: FlowConfig
 }
 
+interface EnabledHold {
+  current: ReadonlySet<SampleLabelKey>
+}
+
+interface ToggleSample {
+  readonly enabled: ReadonlySet<SampleLabelKey>
+  readonly hold: EnabledHold
+  readonly next: PreviewSample
+  readonly on: boolean
+  readonly push: (sample: PreviewSample) => void
+  readonly setEnabled: (keys: ReadonlySet<SampleLabelKey>) => void
+}
+
 interface SampleToggleProps {
   readonly enabled: ReadonlySet<SampleLabelKey>
   readonly onToggle: (sample: PreviewSample, on: boolean) => void
   readonly sample: PreviewSample
   readonly t: Translate
 }
+
+interface PreviewStageProps {
+  readonly fontFamily: string
+  readonly host: (element: HTMLElement | null) => (() => void) | undefined
+  readonly light: boolean
+}
+
+const toggleSample = ({ enabled, hold, next, on, push, setEnabled }: ToggleSample): void => {
+  const keys = new Set(enabled)
+  if (on) {
+    keys.add(next.labelKey)
+    push(next)
+  } else {
+    keys.delete(next.labelKey)
+  }
+  hold.current = keys
+  setEnabled(keys)
+}
+
+const PreviewStage = ({ fontFamily, host, light }: PreviewStageProps): ReactElement => (
+  <div
+    className={light ? 'preview is-light' : 'preview'}
+    data-font={fontFamily}
+    key={fontFamily}
+    ref={host}
+  />
+)
 
 const SampleToggle = ({ enabled, onToggle, sample, t }: SampleToggleProps): ReactElement => (
   <div className="preview-sample">
@@ -51,7 +91,12 @@ const SampleToggle = ({ enabled, onToggle, sample, t }: SampleToggleProps): Reac
 export const PreviewPanel = ({ formatLabel, settings, t }: PreviewPanelProps): ReactElement => {
   const [light, setLight] = useState(true)
   const [enabled, setEnabled] = useState<ReadonlySet<SampleLabelKey>>(ALL_SAMPLE_KEYS)
-  const { host, push, samples } = usePreview({ enabled, formatLabel, settings })
+  const enabledHold = useRef(enabled)
+  const { host, push, samples } = usePreview({
+    enabled: enabledHold,
+    formatLabel,
+    settings,
+  })
   return (
     <section>
       <h2>{t('sectionPreview')}</h2>
@@ -79,21 +124,14 @@ export const PreviewPanel = ({ formatLabel, settings, t }: PreviewPanelProps): R
             enabled={enabled}
             key={sample.labelKey}
             onToggle={(next, on) => {
-              const keys = new Set(enabled)
-              if (on) {
-                keys.add(next.labelKey)
-                push(next)
-              } else {
-                keys.delete(next.labelKey)
-              }
-              setEnabled(keys)
+              toggleSample({ enabled, hold: enabledHold, next, on, push, setEnabled })
             }}
             sample={sample}
             t={t}
           />
         ))}
       </p>
-      <div className={light ? 'preview is-light' : 'preview'} ref={host} />
+      <PreviewStage fontFamily={settings.fontFamily} host={host} light={light} />
     </section>
   )
 }

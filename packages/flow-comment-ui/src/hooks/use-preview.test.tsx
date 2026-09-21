@@ -1,4 +1,5 @@
 import type { FormatLabel } from '@my-onecomme-plugins/flow-comment-core/comment'
+import type { SampleLabelKey } from '@my-onecomme-plugins/flow-comment-core/samples'
 import { PREVIEW_SAMPLES } from '@my-onecomme-plugins/flow-comment-core/samples'
 import { sanitizeConfig } from '@my-onecomme-plugins/flow-comment-core/settings'
 import type { FlowConfig } from '@my-onecomme-plugins/flow-comment-core/settings'
@@ -6,6 +7,7 @@ import { click, mount, mountWithUpdate, required } from '@testing/react'
 // @vitest-environment happy-dom
 // Runs with bun.
 import type { ReactElement } from 'react'
+import { useRef } from 'react'
 import { afterEach, expect, test, vi } from 'vitest'
 
 import { usePreview } from './use-preview'
@@ -17,8 +19,9 @@ const settings = (overrides: Record<string, unknown> = {}): FlowConfig =>
 const ALL_KEYS = new Set(PREVIEW_SAMPLES.map((sample) => sample.labelKey))
 
 const Probe = ({ config }: { readonly config: FlowConfig }): ReactElement => {
+  const enabled = useRef(ALL_KEYS)
   const { host, push, samples } = usePreview({
-    enabled: ALL_KEYS,
+    enabled,
     formatLabel,
     settings: config,
   })
@@ -66,7 +69,7 @@ test('applies the settings that are passed in', () => {
 test('streams the samples on its own', () => {
   expect.hasAssertions()
   vi.useFakeTimers()
-  const container = mount(<Probe config={settings()} />)
+  const container = mount(<Probe config={settings({ durationMs: 10_000 })} />)
   vi.advanceTimersByTime(900 * 3)
   expect(container.querySelectorAll('.fc-item').length).toBe(3)
 })
@@ -91,4 +94,17 @@ test('holds the samples while the tab is not visible', () => {
   expect(container.querySelectorAll('.fc-item').length).toBe(0)
   Object.defineProperty(document, 'hidden', { configurable: true, value: false })
   vi.useRealTimers()
+})
+
+test('pushes nothing when no sample is enabled', () => {
+  expect.hasAssertions()
+  vi.useFakeTimers()
+  const Empty = (): ReactElement => {
+    const enabled = useRef(new Set<SampleLabelKey>())
+    const { host } = usePreview({ enabled, formatLabel, settings: settings() })
+    return <div className="host" ref={host} />
+  }
+  const container = mount(<Empty />)
+  vi.advanceTimersByTime(900 * 3)
+  expect(container.querySelectorAll('.fc-item').length).toBe(0)
 })

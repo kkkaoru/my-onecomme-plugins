@@ -2,13 +2,20 @@
 import { expect, test } from 'vitest'
 
 import { DEFAULT_CONFIG } from './defaults'
-import { BASE_FONT_FAMILIES, familyOf, matchingFonts } from './fonts'
+import { BASE_FONT_FAMILIES, cssFontFamily, familyOf, matchingFonts } from './fonts'
 
 test('ships a candidate list that covers the common Japanese fonts', () => {
   expect.hasAssertions()
   expect(BASE_FONT_FAMILIES).not.toContain(DEFAULT_CONFIG.fontFamily)
   expect(BASE_FONT_FAMILIES).toContain('Hiragino Kaku Gothic ProN')
   expect(BASE_FONT_FAMILIES).toContain('sans-serif')
+})
+
+test('keeps a family name for the CSSOM', () => {
+  expect.hasAssertions()
+  expect(cssFontFamily('Hiragino Sans')).toBe('Hiragino Sans')
+  expect(cssFontFamily('sans-serif')).toBe('sans-serif')
+  expect(cssFontFamily('')).toBe('sans-serif')
 })
 
 test('strips the quotes document.fonts adds around family names', () => {

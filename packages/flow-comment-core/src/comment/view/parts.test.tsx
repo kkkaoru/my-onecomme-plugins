@@ -50,11 +50,13 @@ test('shows the author name only when it is wanted', () => {
 
 test('renders the ready-made body as it arrived', () => {
   expect.hasAssertions()
-  const { container, update } = mountWithUpdate(<CommentBody color="#333333" html="<b>a</b>" />)
+  const { container, update } = mountWithUpdate(
+    <CommentBody color="#333333" fontFamily="serif" html="<b>a</b>" />,
+  )
   const body = container.querySelector<HTMLElement>('.fc-text')
   expect(body?.innerHTML).toBe('<b>a</b>')
   expect(body?.style.color).toBe('#333333')
-  update(<CommentBody color="#eeeeee" html="<i>b</i>" />)
+  update(<CommentBody color="#eeeeee" fontFamily="serif" html="<i>b</i>" />)
   expect(container.querySelector('.fc-text')?.innerHTML).toBe('<i>b</i>')
 })
 
@@ -96,7 +98,7 @@ test('keeps every part through unchanged and changed props', () => {
     ),
   ).not.toBeNull()
 
-  const body = { color: '#333333', html: 'a' }
+  const body = { color: '#333333', fontFamily: 'serif', html: 'a' }
   expect(
     exercise(<CommentBody {...body} />, <CommentBody {...body} html="b" />).querySelector(
       '.fc-text',

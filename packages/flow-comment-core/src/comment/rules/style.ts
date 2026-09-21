@@ -5,6 +5,7 @@
 import type { CSSProperties } from 'react'
 
 import type { FlowConfig } from '../../settings/config'
+import { cssFontFamily } from '../../settings/fonts'
 import { px } from '../../units'
 import type { FlowColors, FlowComment } from '../model/comment'
 
@@ -71,7 +72,7 @@ export const selectItemStyle = (config: FlowConfig, card: boolean): CSSPropertie
   WebkitTextStroke: selectStroke(config),
   boxShadow: card ? selectShadow(config) : '',
   color: config.textColor,
-  fontFamily: config.fontFamily,
+  fontFamily: cssFontFamily(config.fontFamily),
   fontSize: px(config.fontSizePx),
   fontWeight: String(config.fontWeight),
   opacity: String(config.opacity),

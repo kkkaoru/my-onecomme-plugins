@@ -48,11 +48,16 @@ export const AuthorName = ({ color, name, visible }: AuthorNameProps): ReactElem
 
 interface CommentBodyProps {
   readonly color: string
+  readonly fontFamily: string
   readonly html: string
 }
 
 // OneComme hands over ready-made HTML (gift images included), so it is rendered
 // as-is rather than parsed into parts.
-export const CommentBody = ({ color, html }: CommentBodyProps): ReactElement => (
-  <span className="fc-text" dangerouslySetInnerHTML={{ __html: html }} style={{ color }} />
+export const CommentBody = ({ color, fontFamily, html }: CommentBodyProps): ReactElement => (
+  <span
+    className="fc-text"
+    dangerouslySetInnerHTML={{ __html: html }}
+    style={{ color, fontFamily }}
+  />
 )
