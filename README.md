@@ -4,6 +4,8 @@
 
 エージェントは `AGENTS.md` を先に読む。テストではわんコメは更新されない。
 
+配布 zip は [Releases](https://github.com/kkkaoru/my-onecomme-plugins/releases) から取る。`v*` タグを push すると `flow-comment.zip` が付く。
+
 ## 必要環境
 
 - bun 1.3+

@@ -21,6 +21,15 @@ src/ + template/ + static/  --ビルド-->  dist/flow-comment-template/  -> temp
 
 ## インストール
 
+[Releases](https://github.com/kkkaoru/my-onecomme-plugins/releases) の `flow-comment.zip` をダウンロードし、わんコメのデータフォルダに展開する。
+
+- macOS: `~/Library/Application Support/OneComme/`
+- Windows: `%APPDATA%/OneComme/`
+
+zip の中身は `plugins/flow-comment` と `templates/custom/flow-comment`。わんコメを再起動し、テンプレートとプラグインで「流れるコメント」を有効化する。
+
+開発する場合:
+
 ```sh
 bun install
 bun run build   # dist 作成 + わんコメへコピー

@@ -18,6 +18,11 @@ if (!existsSync(PLUGIN_SRC) || !existsSync(TEMPLATE_SRC)) {
   process.exit(1)
 }
 
+if (!existsSync(SUPPORT)) {
+  console.info('[flow-comment] OneComme not installed; skip copy')
+  process.exit(0)
+}
+
 mkdirSync(PLUGIN_DEST, { recursive: true })
 mkdirSync(TEMPLATE_DEST, { recursive: true })
 cpSync(PLUGIN_SRC, PLUGIN_DEST, { recursive: true })

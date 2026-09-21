@@ -26,7 +26,8 @@
     "typecheck": "bun run tsc",
     "coverage:compiled": "vitest run --coverage",
     "a11y": "node scripts/a11y.mjs",
-    "measure": "node scripts/measure.mjs"
+    "measure": "node scripts/measure.mjs",
+    "pack": "node scripts/pack-release.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.8.0",
