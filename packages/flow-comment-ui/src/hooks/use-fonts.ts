@@ -6,7 +6,7 @@ import {
 // Runs with bun.
 // フォント候補。端末のフォントは Local Font Access がある環境でのみ増える。
 // すでに許可されているときは、ボタンを押させずに読み込む。
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 // Local Font Access API（ブラウザ標準）は secure context でのみ生える。
 // 型は使う側のこのファイルに置き、別の d.ts を読ませない。
@@ -73,6 +73,15 @@ const permissionGranted = async (): Promise<boolean> => {
   }
 }
 
+const loadIfGranted = async (loadLocal: () => Promise<void>): Promise<void> => {
+  if (!hasLocalFontAccess()) {
+    return
+  }
+  if (await permissionGranted()) {
+    await loadLocal()
+  }
+}
+
 export const useFonts = (filter: string): FontCandidates => {
   const [added, setAdded] = useState<readonly string[]>([])
   // そもそも API が無い環境は、ボタンを押させずに「読めない」と伝える。
@@ -99,18 +108,11 @@ export const useFonts = (filter: string): FontCandidates => {
       setLoadResult('denied')
     }
   }, [])
-
-  // すでに許可済みなら、ボタンを押させずに読む。
-  useEffect(() => {
-    if (!hasLocalFontAccess()) {
-      return
-    }
-    void (async (): Promise<void> => {
-      if (await permissionGranted()) {
-        await loadLocal()
-      }
-    })()
-  }, [loadLocal])
+  const [started, setStarted] = useState(false)
+  if (!started) {
+    setStarted(true)
+    void loadIfGranted(loadLocal)
+  }
 
   return { canLoad: hasLocalFontAccess(), loadLocal, loadResult, matches }
 }

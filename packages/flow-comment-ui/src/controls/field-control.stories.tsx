@@ -99,13 +99,14 @@ export const Radio: Story = {
 export const Font: Story = {
   args: { initial: 'Roboto', spec: specOf('fontFamily') },
   play: async ({ canvasElement }): Promise<void> => {
-    const pick = canvasElement.querySelector('.fc-font-pick')
-    if (pick === null) {
-      throw new Error('no pick button')
+    const input = canvasElement.querySelector('.font-picker input')
+    if (input === null) {
+      throw new Error('no font combobox')
     }
-    await userEvent.click(pick)
-    await expect(canvasElement.querySelector('.fc-font-search')).toBeTruthy()
-    await expect(canvasElement.querySelectorAll('.fc-font-choice').length).toBeGreaterThan(0)
+    await expect(input.getAttribute('list')).toBe('fc-fonts-fontFamily')
+    await expect(
+      canvasElement.querySelectorAll('#fc-fonts-fontFamily option').length,
+    ).toBeGreaterThan(0)
   },
 }
 

@@ -90,24 +90,14 @@ test('renders a colour field as a colour input', () => {
   expect(container.querySelector('input')?.getAttribute('type')).toBe('color')
 })
 
-test('filters the font candidates from the search box', () => {
+test('lists font candidates on the combobox', () => {
   expect.hasAssertions()
   const { container } = control(specOf('fontFamily'), 'Roboto')
-  click(required(container.querySelector('.fc-font-pick'), 'pick button'))
-  const search = required(container.querySelector('.fc-font-search'), 'search box')
-  typeInto(search, 'roboto')
-  const choices = [...container.querySelectorAll('.fc-font-choice')].map(
-    (choice) => choice.textContent,
+  const options = [...container.querySelectorAll('#fc-fonts-fontFamily option')].map((option) =>
+    option.getAttribute('value'),
   )
-  expect(choices).toStrictEqual(['Roboto'])
-})
-
-test('fills the font field from a candidate', () => {
-  expect.hasAssertions()
-  const { container, onInput } = control(specOf('fontFamily'), 'Roboto')
-  click(required(container.querySelector('.fc-font-pick'), 'pick'))
-  click(required(container.querySelector('.fc-font-choice'), 'choice'))
-  expect(onInput).toHaveBeenCalledWith(expect.any(String))
+  expect(options.filter((name) => name === 'Roboto')).toStrictEqual(['Roboto'])
+  expect(options.filter((name) => name === 'Arial')).toStrictEqual(['Arial'])
 })
 
 test('hides the load button where the browser cannot list device fonts', () => {
@@ -163,8 +153,10 @@ test('loads device fonts from the button when the browser allows it', async () =
   )
   const { container } = control(specOf('fontFamily'), 'Roboto')
   await clickAsync(required(container.querySelector('.fc-load-fonts'), 'load button'))
-  click(required(container.querySelector('.fc-font-pick'), 'pick button'))
-  expect(container.textContent).toContain('Machine Font')
+  const options = [...container.querySelectorAll('#fc-fonts-fontFamily option')].map((option) =>
+    option.getAttribute('value'),
+  )
+  expect(options.filter((name) => name === 'Machine Font')).toStrictEqual(['Machine Font'])
   vi.unstubAllGlobals()
 })
 
@@ -214,20 +206,11 @@ test('keeps every kind of control through unchanged and changed values', () => {
   }
 })
 
-test('narrows the choices as you type in the search box', () => {
-  expect.hasAssertions()
-  const { container } = control(specOf('fontFamily'), 'Roboto')
-  click(required(container.querySelector('.fc-font-pick'), 'pick button'))
-  const search = required(container.querySelector('.fc-font-search'), 'search box')
-  typeInto(search, 'roboto')
-  expect([...container.querySelectorAll('.fc-font-choice')].length).toBe(1)
-})
-
 test('keeps the picker out of reach while disabled', () => {
   expect.hasAssertions()
   const { container, onInput } = control(specOf('fontFamily'), 'Roboto', true)
-  click(required(container.querySelector('.fc-font-pick'), 'pick button'))
-  expect(onInput).not.toHaveBeenCalledWith(expect.any(String))
+  expect(container.querySelector<HTMLInputElement>('.font-picker input')?.disabled).toBe(true)
+  expect(onInput).not.toHaveBeenCalled()
 })
 
 // 無効な行は、見えているが触れないことが分かるようにする。
