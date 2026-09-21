@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 // Runs with bun.
-import { afterEach, beforeEach, expect, test } from 'vitest'
+import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 
 import type { FormatLabel } from '../comment/rules/label'
 import { sanitizeConfig } from '../settings/config'
@@ -13,30 +13,7 @@ const CONTAINER_WIDTH = 1000
 const CONTAINER_HEIGHT = 300
 const ITEM_WIDTH = 200
 const DURATION = 1000
-
-interface Recorded {
-  readonly animation: Animation
-  readonly keyframes: readonly Keyframe[]
-  readonly options: KeyframeAnimationOptions | undefined
-}
-
-const recorded: Recorded[] = []
-const originalAnimate = Element.prototype.animate
-
-// 実物の Animation を返しつつ呼び出しを記録する。終了は finish() で再現できる。
-const recordAnimate = function recordAnimate(
-  this: Element,
-  keyframes: Keyframe[] | PropertyIndexedKeyframes | null,
-  options?: number | KeyframeAnimationOptions,
-): Animation {
-  const animation: Animation = originalAnimate.call(this, keyframes, options)
-  recorded.push({
-    animation,
-    keyframes: Array.isArray(keyframes) ? keyframes : [],
-    options: typeof options === 'object' ? options : undefined,
-  })
-  return animation
-}
+const frames: FrameRequestCallback[] = []
 
 const createRootElement = (): HTMLElement => {
   const root = document.createElement('div')
@@ -52,29 +29,26 @@ const createRootElement = (): HTMLElement => {
   return root
 }
 
-// Tests use a plain formatter so assertions stay about the DOM.
 const formatLabel: FormatLabel = (label) => label.text ?? label.kind
 
 const createTestFlow = (root: HTMLElement, settings: FlowConfig): FlowController =>
-  createFlow(root, settings, { formatLabel })
+  createFlow(root, settings, { formatLabel, metrics: false })
 
 const config = (): FlowConfig => sanitizeConfig({ durationMs: DURATION, lanes: 3 })
 
-const propertiesOf = (index: number): readonly string[] =>
-  Object.keys(recorded[index]?.keyframes[0] ?? { transform: '' })
-
-const transformsOf = (index: number): readonly string[] =>
-  recorded[index]?.keyframes.map((frame) => String(frame['transform'])) ?? []
-
-const settle = async (): Promise<void> => {
-  await Promise.resolve()
-  await Promise.resolve()
+const pump = (now: number): void => {
+  const callback = frames.shift()
+  callback?.(now)
 }
 
 beforeEach(() => {
-  recorded.length = 0
+  frames.length = 0
   document.body.innerHTML = ''
-  Element.prototype.animate = recordAnimate
+  vi.spyOn(Math, 'random').mockReturnValue(0)
+  vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
+    frames.push(callback)
+    return frames.length
+  })
   Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
     configurable: true,
     get(): number {
@@ -84,10 +58,10 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-  Element.prototype.animate = originalAnimate
+  vi.restoreAllMocks()
+  vi.unstubAllGlobals()
 })
 
-// 画素比が無い環境（テスト用の DOM など）でも 1 として扱う。
 test('falls back to one without a device pixel ratio', () => {
   expect.hasAssertions()
   const original = globalThis.devicePixelRatio
@@ -98,6 +72,13 @@ test('falls back to one without a device pixel ratio', () => {
   })
   expect(devicePixelRatioOf()).toBe(1)
   globalThis.devicePixelRatio = original
+})
+
+test('mounts a metrics overlay when asked', () => {
+  expect.hasAssertions()
+  const root = createRootElement()
+  createFlow(root, config(), { formatLabel, metrics: true })
+  expect(root.querySelector('.fc-metrics')).not.toBeNull()
 })
 
 test('appends an item per comment', () => {
@@ -119,36 +100,37 @@ test('writes the lane index onto each item', () => {
   flow.push({ html: 'd', id: '4', name: 'n' })
   expect(
     [...root.querySelectorAll('.fc-item')].map((element) => element.getAttribute('data-lane')),
-  ).toStrictEqual(['0', '1', '2', '0'])
+  ).toStrictEqual(['0', '1', '2'])
+  expect(root.querySelectorAll('.fc-item').length).toBe(3)
 })
 
-test('animates from the right edge to past the left edge', () => {
+test('applies the font family to the run', () => {
+  expect.hasAssertions()
+  const root = createRootElement()
+  const flow = createTestFlow(
+    root,
+    sanitizeConfig({ durationMs: DURATION, fontFamily: 'Impact', lanes: 3 }),
+  )
+  flow.push({ html: 'a', id: '1', name: 'n' })
+  expect(root.querySelector<HTMLElement>('.fc-run')?.style.fontFamily).toBe('Impact')
+  flow.applyConfig(sanitizeConfig({ durationMs: DURATION, fontFamily: 'serif', lanes: 3 }))
+  expect(root.querySelector<HTMLElement>('.fc-run')?.style.fontFamily).toBe('serif')
+})
+
+test('starts at the right edge', () => {
   expect.hasAssertions()
   const root = createRootElement()
   const flow = createTestFlow(root, config())
   flow.push({ html: 'a', id: '1', name: 'n' })
-  expect(transformsOf(0)).toStrictEqual(['translate3d(1000px, 0, 0)', 'translate3d(-200px, 0, 0)'])
+  expect(root.querySelector<HTMLElement>('.fc-run')?.style.transform).toBe('translate(1000px, 0)')
 })
 
-test('uses the configured duration and linear easing', () => {
-  expect.hasAssertions()
-  const root = createRootElement()
-  const flow = createTestFlow(root, config())
-  flow.push({ html: 'a', id: '1', name: 'n' })
-  expect(recorded[0]?.options).toStrictEqual({
-    composite: 'replace',
-    duration: DURATION,
-    easing: 'linear',
-    fill: 'forwards',
-  })
-})
-
-test('animates in the opposite direction when configured', () => {
+test('starts off the left edge when flowing ltr', () => {
   expect.hasAssertions()
   const root = createRootElement()
   const flow = createTestFlow(root, sanitizeConfig({ direction: 'ltr', durationMs: DURATION }))
   flow.push({ html: 'a', id: '1', name: 'n' })
-  expect(transformsOf(0)).toStrictEqual(['translate3d(-200px, 0, 0)', 'translate3d(1000px, 0, 0)'])
+  expect(root.querySelector<HTMLElement>('.fc-run')?.style.transform).toBe('translate(-200px, 0)')
 })
 
 test('places the item in the lane it was assigned', () => {
@@ -166,13 +148,28 @@ test('places the item in the lane it was assigned', () => {
   expect(tops).toStrictEqual(['0px', '100px'])
 })
 
-test('removes the item once the animation finishes', async () => {
+test('starts a waiting comment when a lane frees', () => {
   expect.hasAssertions()
   const root = createRootElement()
   const flow = createTestFlow(root, config())
   flow.push({ html: 'a', id: '1', name: 'n' })
-  recorded[0]?.animation.finish()
-  await settle()
+  flow.push({ html: 'b', id: '2', name: 'n' })
+  flow.push({ html: 'c', id: '3', name: 'n' })
+  flow.push({ html: 'd', id: '4', name: 'n' })
+  pump(0)
+  pump(DURATION)
+  expect(
+    [...root.querySelectorAll('.fc-item')].map((element) => element.getAttribute('data-id')),
+  ).toStrictEqual(['4'])
+})
+
+test('removes the item once the run finishes', () => {
+  expect.hasAssertions()
+  const root = createRootElement()
+  const flow = createTestFlow(root, config())
+  flow.push({ html: 'a', id: '1', name: 'n' })
+  pump(0)
+  pump(DURATION)
   expect(root.querySelectorAll('.fc-item').length).toBe(0)
 })
 
@@ -197,6 +194,16 @@ test('clears every item', () => {
   expect(root.querySelectorAll('.fc-item').length).toBe(0)
 })
 
+test('keeps flying items when the config changes', () => {
+  expect.hasAssertions()
+  const root = createRootElement()
+  const flow = createTestFlow(root, config())
+  flow.push({ html: 'a', id: '1', name: 'n' })
+  flow.applyConfig(sanitizeConfig({ durationMs: DURATION, fontSizePx: 40, lanes: 2 }))
+  expect(root.querySelectorAll('.fc-item').length).toBe(1)
+  expect(root.querySelector<HTMLElement>('.fc-item')?.style.fontSize).toBe('40px')
+})
+
 test('restarts lane assignment when the config changes', () => {
   expect.hasAssertions()
   const root = createRootElement()
@@ -214,31 +221,4 @@ test('ignores pushes after destroy', () => {
   flow.destroy()
   flow.push({ html: 'a', id: '1', name: 'n' })
   expect(root.querySelectorAll('.fc-item').length).toBe(0)
-})
-
-test('promotes the item to its own layer only while moving', () => {
-  expect.hasAssertions()
-  const root = createRootElement()
-  const flow = createTestFlow(root, config())
-  flow.push({ html: 'a', id: '1', name: 'n' })
-  expect(root.querySelector<HTMLElement>('.fc-run')?.style.willChange).toStrictEqual('transform')
-})
-
-test('does not start an animation after destroy', () => {
-  expect.hasAssertions()
-  const root = createRootElement()
-  const flow = createTestFlow(root, config())
-  flow.destroy()
-  flow.push({ html: 'a', id: '1', name: 'n' })
-  expect(recorded.length).toBe(0)
-})
-
-// 位置は transform だけを動かす。レイアウトを触ると毎フレーム再計算になる。
-test('animates only the transform property', () => {
-  expect.hasAssertions()
-  const root = createRootElement()
-  const flow = createTestFlow(root, config())
-  flow.push({ html: 'a', id: '1', name: 'n' })
-  expect(propertiesOf(0)).toStrictEqual(['transform'])
-  expect(transformsOf(0)[0]).toContain('translate3d')
 })

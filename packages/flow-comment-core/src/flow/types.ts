@@ -18,13 +18,20 @@ interface FlowController {
 interface FlowOptions {
   /** The host application owns the words, so it supplies the label text. */
   readonly formatLabel: FormatLabel
+  /** Dev overlay. Off in distributed builds. */
+  readonly metrics: boolean
 }
 
 interface FlowItem {
-  readonly animation: Animation
+  readonly comment: FlowComment
+  readonly durationMs: number
   readonly element: HTMLDivElement
+  readonly from: number
   readonly host: HTMLDivElement
+  readonly lane: number
   readonly root: Root
+  startedAt: number
+  readonly to: number
 }
 
 interface FlowState {
@@ -36,12 +43,15 @@ interface FlowState {
   readonly formatLabel: FormatLabel
   geometry: LaneGeometry | null
   items: FlowItem[]
+  pending: FlowComment[]
   readonly root: HTMLElement
 }
 
 interface MountedItem {
+  readonly comment: FlowComment
   readonly element: HTMLDivElement
   readonly host: HTMLDivElement
+  readonly lane: number
   readonly root: Root
 }
 

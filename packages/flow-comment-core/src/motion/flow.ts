@@ -1,11 +1,11 @@
 // Runs with bun.
-// レーンの割当・行の高さ・移動範囲の計算だけを持つ純粋な層。
-// 実際の移動は Web Animations API が行うため、ここには毎フレーム呼ばれる関数はない。
+// Lane assignment, row height, and travel range. Empty rows are chosen at
+// random. A live comment never shares a row.
 
 const MIN_LANES = 1
 
 interface LaneAllocator {
-  readonly next: () => number
+  readonly pick: (busy: readonly number[]) => number | null
 }
 
 interface LaneGeometryInput {
@@ -30,14 +30,18 @@ const clamp = (value: number, min: number, max: number): number =>
 
 const floorLanes = (laneCount: number): number => Math.max(MIN_LANES, Math.floor(laneCount))
 
-export const createLaneAllocator = (laneCount: number): LaneAllocator => {
-  const lanes = floorLanes(laneCount)
-  let cursor = 0
+const lanesOf = (laneCount: number): readonly number[] =>
+  Array.from({ length: floorLanes(laneCount) }, (_, index) => index)
+
+const pickAmong = (lanes: readonly number[], random: () => number): number =>
+  lanes[Math.floor(random() * lanes.length)] ?? 0
+
+export const createLaneAllocator = (laneCount: number, random: () => number): LaneAllocator => {
+  const lanes = lanesOf(laneCount)
   return {
-    next: () => {
-      const lane = cursor
-      cursor = (cursor + 1) % lanes
-      return lane
+    pick: (busy: readonly number[]): number | null => {
+      const free = lanes.filter((lane) => busy.every((taken) => taken !== lane))
+      return free.length > 0 ? pickAmong(free, random) : null
     },
   }
 }

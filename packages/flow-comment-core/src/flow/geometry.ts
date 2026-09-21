@@ -2,7 +2,7 @@
 // Lane geometry. Recomputed only when the container size changes, because
 // writing height and top invalidates layout.
 
-import { createLaneGeometry } from '../motion/flow'
+import { createLaneGeometry, quantizeToDevicePixel } from '../motion/flow'
 import type { LaneGeometry } from '../motion/flow'
 import { px } from '../units'
 import type { FlowState } from './types'
@@ -10,11 +10,10 @@ import type { FlowState } from './types'
 export const devicePixelRatioOf = (): number => globalThis.devicePixelRatio || 1
 
 export const applyGeometry = (element: HTMLElement, geometry: LaneGeometry, lane: number): void => {
-  // line-height is deliberately not forced: a font taller than its lane would
-  // be squashed onto the neighbouring one.
+  const ratio = devicePixelRatioOf()
   Object.assign(element.style, {
-    height: px(geometry.laneHeightPx),
-    top: px(geometry.topOf(lane)),
+    height: px(quantizeToDevicePixel(geometry.laneHeightPx, ratio)),
+    top: px(quantizeToDevicePixel(geometry.topOf(lane), ratio)),
   })
 }
 

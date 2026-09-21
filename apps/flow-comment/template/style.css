@@ -17,61 +17,76 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  contain: layout paint;
-  isolation: isolate;
-  transform: translateZ(0);
 }
 
-/* 動かすのはラッパーだけ。縁取りや影は内側に置き、毎フレームの再描画を避ける。 */
+.fc-metrics {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 9999;
+  padding: 4px 8px;
+  font: 14px/1 monospace;
+  color: #fff;
+  background: rgb(0 0 0 / 70%);
+  pointer-events: none;
+}
+
+/* 動かすのはラッパーだけ。OBS 内蔵ブラウザは 3D transform で文字がぼける。 */
 .fc-run {
   position: absolute;
   left: 0;
-  backface-visibility: hidden;
   contain: layout style;
-  will-change: transform;
 }
 
 .fc-item {
+  display: flex;
+  gap: 0.25em;
+  align-items: center;
   box-sizing: border-box;
+  line-height: 1;
   white-space: nowrap;
-  contain: layout paint style;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
 }
 
-.fc-name {
-  margin-right: 0.5em;
-}
-
-.fc-text img {
-  height: 1em;
-  width: auto;
-  vertical-align: middle;
-}
-
-.fc-avatar {
-  width: 1.2em;
-  height: 1.2em;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
+.fc-name,
+.fc-paid,
+.fc-text,
 .fc-badge {
   display: inline-flex;
   align-items: center;
+  line-height: 1;
 }
 
-.fc-badge img {
-  height: 1em;
+.fc-run,
+.fc-run * {
+  font-family: inherit;
+}
+
+.fc-name {
+  margin-right: 0.25em;
+}
+
+.fc-item img {
+  display: block;
+  flex-shrink: 0;
   width: auto;
-  vertical-align: middle;
+  height: 1em;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.fc-avatar {
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .fc-paid {
   font-weight: bold;
 }
 
-/* OneComme の標準テーマと同じく、ギフト画像は本文中で少し大きめに出す。 */
 .fc-text .gift-image {
-  height: 2em;
-  width: auto;
-  vertical-align: middle;
+  height: 1em;
 }

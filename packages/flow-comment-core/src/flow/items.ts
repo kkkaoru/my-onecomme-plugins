@@ -1,6 +1,5 @@
 // Runs with bun.
-// The item collection. Adding enforces the cap and removing frees the
-// compositor layer, so the only code that touches the array lives here.
+// The item collection. Adding enforces the cap and removing unmounts the node.
 
 import { unmountItem } from './mount'
 import type { FlowItem, FlowState } from './types'
@@ -10,18 +9,13 @@ export const removeItem = (state: FlowState, item: FlowItem): void => {
     return
   }
   state.items = state.items.filter((entry) => entry !== item)
-  item.animation.cancel()
-  item.host.style.willChange = 'auto'
   unmountItem(item)
 }
 
 export const clearItems = (state: FlowState): void => {
   const removed = state.items
-  // Empty first: a cancelled animation still settles, and its handler checks
-  // membership before doing anything.
   state.items = []
   for (const item of removed) {
-    item.animation.cancel()
     unmountItem(item)
   }
 }
@@ -31,7 +25,6 @@ const enforceCap = (state: FlowState): void => {
   if (excess <= 0) {
     return
   }
-  // Slice first so removing does not disturb the walk.
   for (const item of state.items.slice(0, excess)) {
     removeItem(state, item)
   }

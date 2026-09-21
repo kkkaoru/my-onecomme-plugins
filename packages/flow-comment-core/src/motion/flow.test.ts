@@ -8,24 +8,28 @@ import {
   quantizeToDevicePixel,
 } from './flow'
 
-test('assigns lanes round robin', () => {
+const zero = (): number => 0
+
+test('fills empty lanes and refuses a fourth when three are busy', () => {
   expect.hasAssertions()
-  const allocator = createLaneAllocator(3)
-  expect([allocator.next(), allocator.next(), allocator.next(), allocator.next()]).toStrictEqual([
-    0, 1, 2, 0,
-  ])
+  const allocator = createLaneAllocator(3, zero)
+  expect(allocator.pick([])).toBe(0)
+  expect(allocator.pick([0])).toBe(1)
+  expect(allocator.pick([0, 1])).toBe(2)
+  expect(allocator.pick([0, 1, 2])).toBeNull()
 })
 
-test('assigns the same lane for the same arrival sequence regardless of timing', () => {
+test('picks an empty lane at random', () => {
   expect.hasAssertions()
-  const idle = createLaneAllocator(4)
-  expect([idle.next(), idle.next(), idle.next()]).toStrictEqual([0, 1, 2])
+  const allocator = createLaneAllocator(3, () => 0.99)
+  expect(allocator.pick([])).toBe(2)
 })
 
 test('treats a lane count below one as a single lane', () => {
   expect.hasAssertions()
-  const allocator = createLaneAllocator(0)
-  expect([allocator.next(), allocator.next()]).toStrictEqual([0, 0])
+  const allocator = createLaneAllocator(0, zero)
+  expect(allocator.pick([])).toBe(0)
+  expect(allocator.pick([0])).toBeNull()
 })
 
 test('splits the container evenly between lanes', () => {
