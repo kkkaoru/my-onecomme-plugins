@@ -51,6 +51,13 @@ test('returns null when the plugin answers with an error', async () => {
   expect(await api().fetchSettings()).toBeNull()
 })
 
+test('reads a bare settings body', async () => {
+  expect.hasAssertions()
+  stubFetch(200, { lanes: 6 })
+  const settings = await api().fetchSettings()
+  expect(settings?.lanes).toBe(6)
+})
+
 test('returns null when the envelope carries no response', async () => {
   expect.hasAssertions()
   stubFetch(200, { code: 200 })

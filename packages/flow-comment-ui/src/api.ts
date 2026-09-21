@@ -4,6 +4,8 @@
 import { sanitizeConfig } from '@my-onecomme-plugins/flow-comment-core/settings'
 import type { FlowConfig } from '@my-onecomme-plugins/flow-comment-core/settings'
 
+import { publishSettings } from './settings-sync'
+
 const STATUS_OK = 200
 const PRESET_QUERY = '?action=presets'
 
@@ -24,7 +26,10 @@ const readEnvelope = (payload: unknown): unknown => {
   if (!isRecord(payload)) {
     return null
   }
-  return Object.entries(payload).find(([key]) => key === 'response')?.[1] ?? null
+  if (Object.hasOwn(payload, 'response')) {
+    return payload['response'] ?? null
+  }
+  return Object.hasOwn(payload, 'lanes') ? payload : null
 }
 
 export const createSettingsApi = (baseUrl: string): SettingsApi => {
@@ -51,12 +56,18 @@ export const createSettingsApi = (baseUrl: string): SettingsApi => {
     return payload === null ? null : sanitizeConfig(payload)
   }
 
+  const storeAndPublish = async (method: string, body?: unknown): Promise<FlowConfig | null> => {
+    const stored = await requestSettings(method, body)
+    if (stored !== null) {
+      publishSettings(stored)
+    }
+    return stored
+  }
+
   const fetchSettings = (): Promise<FlowConfig | null> => requestSettings('GET')
-
   const saveSettings = (settings: FlowConfig): Promise<FlowConfig | null> =>
-    requestSettings('PUT', settings)
-
-  const resetSettings = (): Promise<FlowConfig | null> => requestSettings('DELETE')
+    storeAndPublish('PUT', settings)
+  const resetSettings = (): Promise<FlowConfig | null> => storeAndPublish('DELETE')
 
   const fetchPresets = async (): Promise<readonly (readonly [string, unknown])[]> => {
     const payload = await request('GET', undefined, PRESET_QUERY)

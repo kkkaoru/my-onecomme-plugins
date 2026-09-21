@@ -14,6 +14,7 @@ bun run test
 ```
 
 カバレッジを触る作業では `bun run coverage`（statements / branches / functions / lines すべて 95% 以上）。
+ぼやけ・カクつきは `bun run measure`（HUD の fps / jank / subpx を JSON に書く）。
 
 テストが緑でもわんコメは古いまま。次の「実機反映」を省略しない。
 

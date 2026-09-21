@@ -9,6 +9,8 @@
     "./status-line": "./src/parts/status-line.tsx",
     "./preview-panel": "./src/panels/preview-panel.tsx",
     "./api": "./src/api.ts",
+    "./hud": "./src/hud.ts",
+    "./settings-sync": "./src/settings-sync.ts",
     "./settings-screen": "./src/settings-screen.tsx",
     "./messages": "./src/messages.ts",
     "./json-panel": "./src/panels/json-panel.tsx"
