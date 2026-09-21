@@ -2,7 +2,7 @@
 // 設定の形と既定値。ここが唯一の「正」で、読み取りも検証もこの表を参照する。
 const DEFAULT_LANES = 5
 const DEFAULT_DURATION_MS = 9000
-const DEFAULT_FONT_SIZE_PX = 36
+const DEFAULT_FONT_SIZE_PX = 62
 const DEFAULT_FONT_WEIGHT = 700
 const DEFAULT_OUTLINE_WIDTH_PX = 2
 const DEFAULT_SHADOW_BLUR_PX = 1

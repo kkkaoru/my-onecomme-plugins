@@ -17,7 +17,7 @@ test('falls back to the documented defaults', () => {
     direction: 'rtl',
     durationMs: 9000,
     fontFamily: 'Noto Sans JP Variable',
-    fontSizePx: 36,
+    fontSizePx: 62,
     fontWeight: 700,
     laneGapPx: 4,
     laneHeightPx: 0,
