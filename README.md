@@ -4,7 +4,7 @@
 
 エージェントは `AGENTS.md` を先に読む。テストではわんコメは更新されない。
 
-配布は [Releases](https://github.com/kkkaoru/my-onecomme-plugins/releases) の `plugin_flow-comment.zip` と `template_flow-comment.zip`。
+配布は [Releases](https://github.com/kkkaoru/my-onecomme-plugins/releases) の `all_flow-comment.zip`（まとめ）、`plugin_flow-comment.zip`、`template_flow-comment.zip`。
 
 ## 必要環境
 

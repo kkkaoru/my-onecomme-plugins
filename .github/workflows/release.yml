@@ -21,4 +21,4 @@ jobs:
       - run: bun scripts/pack-release.mjs
       - env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release create "$GITHUB_REF_NAME" dist/plugin_flow-comment.zip dist/template_flow-comment.zip --generate-notes --title "$GITHUB_REF_NAME" --notes "プラグインは plugin_flow-comment.zip を展開してフォルダを置く。テンプレートは template_flow-comment.zip を一覧へドロップする（展開しない）。Source code は使わないでください。"
+        run: gh release create "$GITHUB_REF_NAME" dist/all_flow-comment.zip dist/plugin_flow-comment.zip dist/template_flow-comment.zip --generate-notes --title "$GITHUB_REF_NAME" --notes "3ファイルです。まとめは all_flow-comment.zip。プラグインは plugin_flow-comment.zip を展開してフォルダを置く。テンプレートは template_flow-comment.zip を一覧へドロップ（展開しない）。Source code は使わないでください。"

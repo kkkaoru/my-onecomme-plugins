@@ -13,9 +13,10 @@
       <p><a href="./">設定画面へ戻る</a></p>
       <h1>流れるコメント 使い方</h1>
       <p>
-        わんコメのコメントを、画面の右から左へ流して表示します。設定は入力を止めると自動で保存されます。
+        わんコメのコメントを、画面の右から左へ流して表示します。スーパーチャット・ギフト・メンバー加入は
+        YouTube と同じ色のカードで流れます。設定は入力を止めると自動で保存されます。
       </p>
-      <h2>1. 準備</h2>
+      <h2>1. 入れる</h2>
       <figure>
         <img
           alt="プラグインを有効にし、テンプレートで流れるコメントを選ぶ"
@@ -24,12 +25,47 @@
           width="480"
         />
       </figure>
+      <p>配布は zip が3つあります。</p>
+      <ul>
+        <li>
+          <code>all_flow-comment.zip</code> … まとめ。展開すると <code>plugin_flow-comment</code> と
+          <code>template_flow-comment.zip</code> が出る
+        </li>
+        <li>
+          <code>plugin_flow-comment.zip</code> … 展開し、<code>plugin_flow-comment</code>
+          フォルダをプラグインフォルダへコピーする
+        </li>
+        <li>
+          <code>template_flow-comment.zip</code> …
+          展開しない。テンプレート一覧へドラッグ＆ドロップする
+        </li>
+      </ul>
       <ol>
-        <li>わんコメの設定 → プラグインで「流れるコメント」を有効にする</li>
-        <li>わんコメの設定 → テンプレートで「流れるコメント」を選ぶ</li>
-        <li>設定画面はプラグインのリンクから開く</li>
+        <li>わんコメ右上メニュー → プラグイン →「プラグインフォルダ」を開く</li>
+        <li>
+          <code>plugin_flow-comment</code> をコピーする（直下に <code>plugin.js</code> があること）
+        </li>
+        <li>プラグイン一覧で再読み込みし、「流れるコメント」を有効化する</li>
+        <li>
+          <code>template_flow-comment.zip</code>
+          をテンプレート一覧へドロップする（中を展開するとフォルダが二重になる）
+        </li>
+        <li>テンプレート「流れるコメント」を選ぶ</li>
       </ol>
-      <h2>2. 見た目を変える</h2>
+      <h2>2. 設定画面を開く</h2>
+      <ol>
+        <li>わんコメ右上メニュー → プラグイン</li>
+        <li>「流れるコメント」を有効化する</li>
+        <li>一覧の URL ボタンを押す</li>
+      </ol>
+      <p>
+        またはブラウザで
+        <a href="http://localhost:11180/plugins/com.example.my-onecomme-plugins.flow-comment/"
+          >http://localhost:11180/plugins/com.example.my-onecomme-plugins.flow-comment/</a
+        >
+        を開く。
+      </p>
+      <h2>3. 見た目を変える</h2>
       <figure>
         <img
           alt="設定画面のプレビューでコメントが右から左へ流れる"
@@ -40,10 +76,10 @@
       </figure>
       <ul>
         <li>プレビューで文字サイズ・色・レーンを確認する</li>
-        <li>値を変えると約 0.5 秒後に自動保存され、配信側にも反映される</li>
+        <li>値を変えると自動保存され、配信側にも反映される</li>
         <li>「初期値に戻す」で出荷時の設定に戻る</li>
       </ul>
-      <h2>3. OBS に出す</h2>
+      <h2>4. OBS に出す</h2>
       <figure>
         <img
           alt="OBS のブラウザソースにわんコメの配信画面 URL を貼る"
@@ -58,7 +94,10 @@
         <li>幅と高さは配信と同じにする（例: 1920×1080）</li>
         <li>設定を変えたあとは、ソースを右クリックして「ブラウザを更新」する</li>
       </ol>
-      <p><a href="./">設定画面へ戻る</a> · <a href="./licenses.html">利用ライブラリ</a></p>
+      <p>
+        <a href="./">設定画面へ戻る</a> · <a href="./licenses.html">利用ライブラリ</a> ·
+        <a href="https://github.com/kkkaoru/my-onecomme-plugins">リポジトリ</a>
+      </p>
     </main>
   </body>
 </html>

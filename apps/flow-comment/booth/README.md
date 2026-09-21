@@ -2,7 +2,7 @@
 
 [商品情報を編集](https://manage.booth.pm/items/8877591/edit) へ貼る文面です。
 
-作品ファイルは GitHub Releases の `plugin_flow-comment.zip` と `template_flow-comment.zip`（v1.0.7 以降）。
+作品ファイルは GitHub Releases の `all_flow-comment.zip`（まとめ。中に `plugin_flow-comment` と `template_flow-comment.zip`）。個別は `plugin_flow-comment.zip` と `template_flow-comment.zip`。
 
 リポジトリ: https://github.com/kkkaoru/my-onecomme-plugins
 最新版: https://github.com/kkkaoru/my-onecomme-plugins/releases
@@ -52,18 +52,27 @@
 
 ### 段落 3
 
+## 配布ファイル（3つ）
+
+・all_flow-comment.zip … まとめ。展開すると README、plugin_flow-comment フォルダ、template_flow-comment.zip が出ます
+・plugin_flow-comment.zip … プラグインだけ。展開して plugin_flow-comment フォルダをプラグインフォルダへコピーします（わんコメはプラグイン zip を直接読みません）
+・template_flow-comment.zip … テンプレートだけ。展開せず、テンプレート一覧へドラッグ＆ドロップします（中を展開するとフォルダが二重になります）
+
+### 段落 4
+
 ## 使い方
 
-プラグインとテンプレートで zip が別です。
+まとめ zip を使う場合:
 
-1. `plugin_flow-comment.zip` を展開し、中の `flow-comment` フォルダをわんコメの「プラグインフォルダ」へコピーする（plugin.js がその直下）
-2. プラグイン一覧で再読み込みし、「流れるコメント」を有効化する
-3. `template_flow-comment.zip` は展開せず、テンプレート一覧へドラッグ＆ドロップする
-4. わんコメでテンプレート「流れるコメント」を選び、OBS へ入れる
+1. `all_flow-comment.zip` を展開する
+2. `plugin_flow-comment` フォルダをわんコメの「プラグインフォルダ」へコピーする（plugin.js がその直下）
+3. プラグイン一覧で再読み込みし、「流れるコメント」を有効化する
+4. `template_flow-comment.zip` は展開せず、テンプレート一覧へドラッグ＆ドロップする
+5. わんコメでテンプレート「流れるコメント」を選び、OBS へ入れる
 
 OBS のブラウザソースは配信と同じ解像度（例: 1920×1080）、FPS は 60 にしてください。
 
-### 段落 4
+### 段落 5
 
 ## 設定画面の開き方
 
@@ -76,7 +85,7 @@ http://localhost:11180/plugins/com.example.my-onecomme-plugins.flow-comment/
 
 設定は入力を止めると自動保存されます。配信に出てこないときは、OBS のブラウザソースを右クリックして「ブラウザを更新」してください。
 
-### 段落 5
+### 段落 6
 
 ## 必要環境
 
@@ -118,7 +127,7 @@ https://onecomme.com
 
 ## 作品ファイル
 
-`plugin_flow-comment.zip` と `template_flow-comment.zip`
+`all_flow-comment.zip`（まとめ）、`plugin_flow-comment.zip`、`template_flow-comment.zip`
 
 ## 日本国外への販売
 

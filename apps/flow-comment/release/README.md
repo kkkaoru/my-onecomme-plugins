@@ -2,12 +2,15 @@
 
 わんコメ専用のコメントテンプレート＋設定プラグインです。コメントが画面を右から左へ流れます（左から右にも変更できます）。YouTube のスーパーチャット・ギフト・メンバー加入は、配信と同じ色のカードで流れます。
 
-このファイルは **プラグイン zip** に入っています。テンプレートは別 zip です。
+Release には zip が3つあります。
 
-| ファイル                    | 中身                                         | 入れ方                                                |
-| --------------------------- | -------------------------------------------- | ----------------------------------------------------- |
-| `plugin_flow-comment.zip`   | `README.md` と `flow-comment/plugin.js` ほか | 展開し、`flow-comment` フォルダをプラグインフォルダへ |
-| `template_flow-comment.zip` | `index.html` と `template.json` が直下       | **展開しない。** テンプレート一覧へドロップする       |
+| ファイル                    | 中身                                   | 入れ方                                                     |
+| --------------------------- | -------------------------------------- | ---------------------------------------------------------- |
+| `all_flow-comment.zip`      | 下の2つをまとめたもの                  | 展開してから中身を使う                                     |
+| `plugin_flow-comment.zip`   | `plugin_flow-comment/plugin.js` ほか   | 展開し、`plugin_flow-comment` フォルダをプラグインへコピー |
+| `template_flow-comment.zip` | `index.html` と `template.json` が直下 | **展開しない。** テンプレート一覧へドロップする            |
+
+まとめ zip を展開すると `README.md`、`plugin_flow-comment/`、`template_flow-comment.zip` が出ます。
 
 テンプレートだけでも既定値で流れます。色・速度・フォントなどを変えるときはプラグインも入れて有効化してください。
 
@@ -26,17 +29,17 @@ GitHub の Source code はリポジトリ全体なので使わないでくださ
 
 わんコメはプラグイン zip を直接読み込みません。フォルダを置きます。
 
-1. この zip（`plugin_flow-comment.zip`）を展開する
-2. 中の `flow-comment` を開いて `plugin.js` があることを確認する
+1. この zip を展開する
+2. `plugin_flow-comment` を開いて `plugin.js` があることを確認する
 3. わんコメ右上メニュー → **プラグイン** → **プラグインフォルダ**
-4. `flow-comment` フォルダごとコピーする
+4. `plugin_flow-comment` フォルダごとコピーする
 5. プラグイン一覧で **再読み込み** し、**流れるコメント** を有効化する
 
 ## テンプレート
 
 わんコメはテンプレートを **zip のまま** 一覧へドロップします。中を展開して入れるとフォルダが二重になります。
 
-`template_flow-comment.zip` を開くと、すぐ `index.html` と `template.json` があります（入れ子のフォルダはありません）。
+`template_flow-comment.zip` を開くと、すぐ `index.html` と `template.json` があります。
 
 1. わんコメ右上メニュー → **テンプレート**
 2. `template_flow-comment.zip` を一覧へドラッグ＆ドロップする（またはフォルダアイコンから選ぶ）
@@ -66,5 +69,5 @@ http://localhost:11180/plugins/com.example.my-onecomme-plugins.flow-comment/
 ## アンインストール
 
 1. プラグインを無効化する
-2. `plugins/flow-comment` を削除する
+2. `plugins/plugin_flow-comment` を削除する
 3. テンプレート一覧から「流れるコメント」を削除する
