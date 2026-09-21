@@ -3,6 +3,7 @@
 // be the plugin object itself.
 import { DEFAULT_CONFIG } from '@my-onecomme-plugins/flow-comment-core/settings'
 
+import { version } from '../package.json' with { type: 'json' }
 import { handleRequest } from './settings/request'
 import type { OneCommeStore, PluginRequest, PluginResponse } from './settings/types'
 import { FLOW_COMMENT_UID } from './settings/uid'
@@ -38,7 +39,7 @@ const plugin = {
   },
   uid: FLOW_COMMENT_UID,
   url: `http://localhost:11180/plugins/${FLOW_COMMENT_UID}/`,
-  version: '1.0.0',
+  version,
 }
 
 export default plugin
