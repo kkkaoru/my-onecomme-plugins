@@ -1,6 +1,6 @@
 /* eslint-disable vitest/require-hook -- これはテストではなく単体のスクリプト */
 // Runs with bun.
-// dist をわんコメのデータフォルダへ展開できる zip にする。
+// プラグインとテンプレートのフォルダだけを zip にする。リポジトリは入れない。
 import { spawnSync } from 'node:child_process'
 import { cpSync, existsSync, mkdirSync, rmSync } from 'node:fs'
 import path from 'node:path'
@@ -18,15 +18,18 @@ if (!existsSync(PLUGIN_SRC) || !existsSync(TEMPLATE_SRC)) {
 
 rmSync(STAGE, { recursive: true, force: true })
 rmSync(ZIP, { force: true })
-const pluginDest = path.join(STAGE, 'plugins/flow-comment')
-const templateDest = path.join(STAGE, 'templates/custom/flow-comment')
+const pluginDest = path.join(STAGE, 'flow-comment')
+const templateDest = path.join(STAGE, 'flow-comment-template')
 mkdirSync(pluginDest, { recursive: true })
 mkdirSync(templateDest, { recursive: true })
 cpSync(PLUGIN_SRC, pluginDest, { recursive: true })
 cpSync(TEMPLATE_SRC, templateDest, { recursive: true })
 rmSync(path.join(pluginDest, 'measure.json'), { force: true })
 
-const zip = spawnSync('zip', ['-r', ZIP, 'plugins', 'templates'], { cwd: STAGE, stdio: 'inherit' })
+const zip = spawnSync('zip', ['-r', ZIP, 'flow-comment', 'flow-comment-template'], {
+  cwd: STAGE,
+  stdio: 'inherit',
+})
 if (zip.status !== 0) {
   process.exit(zip.status ?? 1)
 }
