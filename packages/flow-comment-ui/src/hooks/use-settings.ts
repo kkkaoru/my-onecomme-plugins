@@ -1,9 +1,8 @@
 import { sanitizeConfig } from '@my-onecomme-plugins/flow-comment-core/settings'
 import type { FieldValue, FlowConfig } from '@my-onecomme-plugins/flow-comment-core/settings'
 // Runs with bun.
-// 設定の読み書き。初期値は React の外で読んで渡すので、ここに読み込みの
-// effect は要らない。残る effect は自動保存のタイマーだけ。
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+// Settings read/write. Autosave is armed from update(), not from an effect.
+import { useCallback, useMemo, useRef, useState } from 'react'
 
 import type { SettingsApi } from '../api'
 import type { Translate } from '../messages'
@@ -28,32 +27,30 @@ export interface SettingsState {
 
 export const valuesOf = (config: FlowConfig): FieldValues => ({ ...config })
 
-interface Ref<T> {
-  current: T
+interface LatestBox {
+  readonly current: FlowConfig
 }
 
-// 入力のたびに保存すると重いので、止まってから保存する。最新値の控えも
-// ここで更新し、外部から読めるようにする。
-const usePersist = (
+const useAutosave = (
   api: SettingsApi,
-  settings: FlowConfig,
-  latest: Ref<FlowConfig>,
-  dirty: Ref<boolean>,
-): void => {
-  useEffect(() => {
-    // oxlint-disable-next-line react/immutability -- 最新値の控えを更新する
-    latest.current = settings
-    if (!dirty.current) {
+  latest: LatestBox,
+): { readonly arm: () => void; readonly stop: () => void } => {
+  const persist = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const stop = useCallback((): void => {
+    if (persist.current === null) {
       return
     }
-    const timer = globalThis.setTimeout(() => {
-      dirty.current = false
-      void api.saveSettings(settings)
+    globalThis.clearTimeout(persist.current)
+    persist.current = null
+  }, [])
+  const arm = useCallback((): void => {
+    stop()
+    persist.current = globalThis.setTimeout(() => {
+      persist.current = null
+      void api.saveSettings(latest.current)
     }, AUTOSAVE_DELAY_MS)
-    return (): void => {
-      globalThis.clearTimeout(timer)
-    }
-  }, [api, dirty, latest, settings])
+  }, [api, latest, stop])
+  return { arm, stop }
 }
 
 export const useSettings = (
@@ -63,43 +60,50 @@ export const useSettings = (
 ): SettingsState => {
   const [values, setValues] = useState<FieldValues>(() => valuesOf(initial ?? sanitizeConfig({})))
   const [status, setStatus] = useState(() => (initial === null ? t('loadFailed') : ''))
-  const dirty = useRef(false)
   const settings = useMemo(() => sanitizeConfig(values), [values])
   const latest = useRef(settings)
+  const { arm, stop } = useAutosave(api, latest)
 
-  usePersist(api, settings, latest, dirty)
+  const update = useCallback(
+    (key: string, value: FieldValue): void => {
+      setValues((previous) => {
+        const next = { ...previous, [key]: value }
+        latest.current = sanitizeConfig(next)
+        return next
+      })
+      arm()
+    },
+    [arm],
+  )
 
-  const update = useCallback((key: string, value: FieldValue): void => {
-    dirty.current = true
-    setValues((previous) => ({ ...previous, [key]: value }))
-  }, [])
-
-  const apply = useCallback((next: FlowConfig, message: string): void => {
-    dirty.current = false
-    setValues(valuesOf(next))
-    setStatus(message)
-  }, [])
+  const apply = useCallback(
+    (next: FlowConfig, message: string): void => {
+      stop()
+      latest.current = next
+      setValues(valuesOf(next))
+      setStatus(message)
+      void api.saveSettings(next)
+    },
+    [api, stop],
+  )
 
   const save = useCallback(async (): Promise<void> => {
+    stop()
     const stored = await api.saveSettings(latest.current)
-    dirty.current = false
-    if (stored === null) {
-      setStatus(t('saveFailed'))
-      return
-    }
-    setStatus(t('saveSuccess'))
-  }, [api, t])
+    setStatus(stored === null ? t('saveFailed') : t('saveSuccess'))
+  }, [api, stop, t])
 
   const reset = useCallback(async (): Promise<void> => {
+    stop()
     const restored = await api.resetSettings()
-    dirty.current = false
     if (restored === null) {
       setStatus(t('resetFailed'))
       return
     }
+    latest.current = restored
     setValues(valuesOf(restored))
     setStatus(t('resetSuccess'))
-  }, [api, t])
+  }, [api, stop, t])
 
   const current = useCallback((): FlowConfig => latest.current, [])
 

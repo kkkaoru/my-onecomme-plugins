@@ -11,7 +11,6 @@ import type { MessageKey, Translate } from './messages'
 
 export interface SettingsFormProps {
   readonly onReset: () => void
-  readonly onSubmit: () => void
   readonly onUpdate: (key: string, value: FieldValue) => void
   readonly t: Translate
   readonly values: FieldValues
@@ -107,20 +106,13 @@ const FormRow = ({
   )
 }
 
-export const SettingsForm = ({
-  onReset,
-  onSubmit,
-  onUpdate,
-  t,
-  values,
-}: SettingsFormProps): ReactElement => {
+export const SettingsForm = ({ onReset, onUpdate, t, values }: SettingsFormProps): ReactElement => {
   const shadowOff = values['showShadow'] !== true
   return (
     <form
       className="fc-form"
       onSubmit={(event) => {
         event.preventDefault()
-        onSubmit()
       }}
     >
       <h2>{t('sectionDisplay')}</h2>
@@ -138,9 +130,6 @@ export const SettingsForm = ({
         ))}
       </div>
       <div className="actions">
-        <Button className="fc-primary" type="submit">
-          {t('buttonSave')}
-        </Button>
         <Button onClick={onReset} type="button">
           {t('buttonReset')}
         </Button>

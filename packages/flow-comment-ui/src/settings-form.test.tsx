@@ -4,7 +4,6 @@ import type { FieldValue } from '@my-onecomme-plugins/flow-comment-core/settings
 // @vitest-environment happy-dom
 // Runs with bun.
 import { click, exercise, mount, required, translate } from '@testing/react'
-import { act } from 'react'
 import { expect, test, vi } from 'vitest'
 
 import type { FieldValues } from './hooks/use-settings'
@@ -21,22 +20,14 @@ const form = (
 ): {
   readonly container: HTMLElement
   readonly onReset: ReturnType<typeof vi.fn>
-  readonly onSubmit: ReturnType<typeof vi.fn>
   readonly onUpdate: ReturnType<typeof vi.fn>
 } => {
   const onReset = vi.fn<() => void>()
-  const onSubmit = vi.fn<() => void>()
   const onUpdate = vi.fn<() => void>()
   const container = mount(
-    <SettingsForm
-      t={translate}
-      onReset={onReset}
-      onSubmit={onSubmit}
-      onUpdate={onUpdate}
-      values={values(overrides)}
-    />,
+    <SettingsForm t={translate} onReset={onReset} onUpdate={onUpdate} values={values(overrides)} />,
   )
-  return { container, onReset, onSubmit, onUpdate }
+  return { container, onReset, onUpdate }
 }
 
 test('renders one row per setting', () => {
@@ -83,16 +74,6 @@ test('frees the shadow rows once the shadow is on', () => {
   expect(container.querySelectorAll('[data-group="shadow"][data-disabled]').length).toBe(0)
 })
 
-test('asks for a save when the form is submitted', () => {
-  expect.hasAssertions()
-  const { container, onSubmit } = form()
-  const element = required(container.querySelector('form'), 'element')
-  act(() => {
-    element.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-  })
-  expect(onSubmit.mock.calls.length).toBe(1)
-})
-
 test('asks for a reset when the reset button is pressed', () => {
   expect.hasAssertions()
   const { container, onReset } = form()
@@ -109,7 +90,6 @@ test('keeps the form through unchanged and changed values', () => {
     <SettingsForm
       t={translate}
       onReset={vi.fn<() => void>()}
-      onSubmit={vi.fn<() => void>()}
       onUpdate={onUpdate}
       values={values({ showShadow: true })}
     />
@@ -119,7 +99,6 @@ test('keeps the form through unchanged and changed values', () => {
     <SettingsForm
       t={translate}
       onReset={vi.fn<() => void>()}
-      onSubmit={vi.fn<() => void>()}
       onUpdate={vi.fn<() => void>()}
       values={values({ showShadow: false })}
     />,
@@ -133,7 +112,6 @@ test('falls back to an empty value for a key that is missing', () => {
     <SettingsForm
       t={translate}
       onReset={vi.fn<() => void>()}
-      onSubmit={vi.fn<() => void>()}
       onUpdate={vi.fn<() => void>()}
       values={{ showShadow: true }}
     />,
